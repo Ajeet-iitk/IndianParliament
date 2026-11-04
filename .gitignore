@@ -1,0 +1,9 @@
+# Development artifacts
+shots/
+shot-home.png
+
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
