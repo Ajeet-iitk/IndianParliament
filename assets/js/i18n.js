@@ -508,9 +508,9 @@ const I18N = {
       "style.silent": "Silent",
 
       "home.eyebrow": "UPSC Polity · Interactive Simulator",
-      "home.title": "Enter the <em>House.</em><br>Decide the <em>Nation.</em>",
+      "home.title": "House mein <em>aaiye.</em><br>Desh ka <em>faisla</em> kijiye.",
       "home.lede": "Chair sambhaliye. Bills move kijiye, divisions karaiye aur samajhiye ki Constitution kis procedure ke liye kaunsa majority maangta hai — Money Bill se lekar President ke impeachment tak.",
-      "home.cta1": "Take the Chair",
+      "home.cta1": "Chair sambhaliye",
       "home.cta2": "Polity Lab kholiye",
       "home.stat1": "Procedures mastered",
       "home.stat2": "Majority accuracy",
