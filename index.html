@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
 <title>Sansad — The Mock Parliament | UPSC Polity Simulator</title>
 <meta name="description" content="An interactive mock Parliament for UPSC aspirants. Pass ordinary, money and finance bills, amend the Constitution, and move impeachments while mastering every majority the Constitution demands.">
-<meta name="theme-color" content="#070b17">
+<meta name="theme-color" content="#070b17" id="themeColor">
 <meta property="og:title" content="Sansad — The Mock Parliament">
 <meta property="og:description" content="Enter the House. Decide the Nation. A cinematic mock Parliament simulator for UPSC Polity.">
 <meta property="og:type" content="website">
@@ -22,6 +23,8 @@
   <div class="orb orb-2"></div>
   <div class="orb orb-3"></div>
   <div class="grid-lines"></div>
+  <div class="dust dust-a"></div>
+  <div class="dust dust-b"></div>
   <div class="grain"></div>
 </div>
 
@@ -41,19 +44,75 @@
   </nav>
 
   <div class="nav-actions">
-    <div class="xp-pill" title="Experience points earned across all simulations">
+    <div class="xp-pill" data-i18n-title="nav.xp" title="Experience points earned across all simulations">
       <span>XP</span><b id="xpValue">0</b>
     </div>
-    <button class="icon-btn" id="soundBtn" aria-label="Toggle sound" title="Toggle sound">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
-    </button>
+
+    <div class="nav-controls">
+      <div class="popover-wrap">
+        <button class="icon-btn lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" aria-label="Choose language" data-i18n-aria="nav.lang" data-i18n-title="nav.lang" title="Choose language">
+          <span id="langCode">EN</span>
+        </button>
+        <div class="popover lang-menu" id="langMenu" role="menu" aria-label="Language">
+          <button class="lang-option" data-lang="en" role="menuitem"><span>English</span><i>EN</i></button>
+          <button class="lang-option" data-lang="hi" role="menuitem"><span>हिन्दी</span><i>हिं</i></button>
+          <button class="lang-option" data-lang="hinglish" role="menuitem"><span>Hinglish</span><i>HG</i></button>
+        </div>
+      </div>
+
+      <button class="icon-btn theme-btn" id="themeBtn" aria-label="Switch between day and night" data-i18n-aria="nav.theme" data-i18n-title="nav.theme" title="Switch between day and night">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M2 12h2.4M19.6 12H22M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+      </button>
+
+      <div class="popover-wrap">
+        <button class="icon-btn" id="soundBtn" aria-haspopup="true" aria-expanded="false" aria-label="Sound and music" data-i18n-aria="nav.sound" data-i18n-title="nav.sound" title="Sound and music">
+          <svg class="icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/></svg>
+          <svg class="icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H3v6h3l5 4z"/><path d="m16 9 5 6M21 9l-5 6"/></svg>
+        </button>
+        <div class="popover audio-panel" id="audioPanel" aria-label="Sound settings">
+          <div class="ap-head">
+            <strong data-i18n="prefs.title">Sound &amp; comfort</strong>
+            <button class="ap-close" id="audioClose" aria-label="Close" data-i18n-aria="prefs.close">×</button>
+          </div>
+          <label class="pref-row">
+            <span data-i18n="prefs.music">Ambient music</span>
+            <input type="checkbox" id="musicToggle" class="switch" checked>
+          </label>
+          <label class="range-row">
+            <span data-i18n="prefs.musicVol">Music volume</span>
+            <input type="range" id="musicVol" min="0" max="100" step="1" value="42">
+          </label>
+          <label class="range-row">
+            <span data-i18n="prefs.style">Score</span>
+            <select id="musicStyle" class="mini-select">
+              <option value="tanpura" data-i18n="style.tanpura">Tanpura drone</option>
+              <option value="cinematic" data-i18n="style.cinematic">Cinematic pad</option>
+              <option value="silent" data-i18n="style.silent">Silent</option>
+            </select>
+          </label>
+          <label class="pref-row">
+            <span data-i18n="prefs.sfx">Sound effects</span>
+            <input type="checkbox" id="sfxToggle" class="switch" checked>
+          </label>
+          <label class="range-row">
+            <span data-i18n="prefs.sfxVol">Effects volume</span>
+            <input type="range" id="sfxVol" min="0" max="100" step="1" value="70">
+          </label>
+          <label class="pref-row">
+            <span data-i18n="prefs.motion">Reduce motion</span>
+            <input type="checkbox" id="motionToggle" class="switch">
+          </label>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
 <nav class="mobile-dock" aria-label="Mobile navigation">
-  <button class="dock-link is-active" data-nav="home">Home</button>
-  <button class="dock-link" data-nav="select">Order Paper</button>
-  <button class="dock-link" data-nav="learn">Polity Lab</button>
+  <button class="dock-link is-active" data-nav="home" data-i18n="nav.home">Home</button>
+  <button class="dock-link" data-nav="select" data-i18n="nav.order">Order Paper</button>
+  <button class="dock-link" data-nav="learn" data-i18n="nav.lab">Polity Lab</button>
 </nav>
 
 <main>
@@ -63,23 +122,23 @@
 
   <div class="hero">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="pulse-dot"></span> UPSC Polity · Interactive Simulator</div>
-      <h1>Enter the <em>House.</em><br>Decide the <em>Nation.</em></h1>
-      <p class="lede">
+      <div class="eyebrow"><span class="pulse-dot"></span> <span data-i18n="home.eyebrow">UPSC Polity · Interactive Simulator</span></div>
+      <h1 data-i18n-html="home.title">Enter the <em>House.</em><br>Decide the <em>Nation.</em></h1>
+      <p class="lede" data-i18n="home.lede">
         Take the Chair. Move bills, call divisions and discover exactly which majority the
         Constitution demands — from Money Bills to the impeachment of a President.
       </p>
       <div class="hero-cta">
         <button class="btn btn-gold" data-nav="select">
-          Take the Chair
+          <span data-i18n="home.cta1">Take the Chair</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
-        <button class="btn btn-ghost" data-nav="learn">Open the Polity Lab</button>
+        <button class="btn btn-ghost" data-nav="learn" data-i18n="home.cta2">Open the Polity Lab</button>
       </div>
       <div class="hero-stats">
-        <div><b id="statBills">0</b><span>Procedures mastered</span></div>
-        <div><b id="statAccuracy">—</b><span>Majority accuracy</span></div>
-        <div><b>9</b><span>Live scenarios</span></div>
+        <div><b id="statBills">0</b><span data-i18n="home.stat1">Procedures mastered</span></div>
+        <div><b id="statAccuracy">—</b><span data-i18n="home.stat2">Majority accuracy</span></div>
+        <div><b>9</b><span data-i18n="home.stat3">Live scenarios</span></div>
       </div>
     </div>
 
@@ -221,9 +280,9 @@
         </svg>
 
         <div class="art-ticker">
-          <span><i class="dot-saffron"></i> LOK SABHA · 543</span>
-          <span><i class="dot-gold"></i> RAJYA SABHA · 245</span>
-          <span class="live"><i></i> LIVE</span>
+          <span><i class="dot-saffron"></i> <span data-i18n="home.ticker.ls">LOK SABHA · 543</span></span>
+          <span><i class="dot-gold"></i> <span data-i18n="home.ticker.rs">RAJYA SABHA · 245</span></span>
+          <span class="live"><i></i> <span data-i18n="home.ticker.live">LIVE</span></span>
         </div>
       </div>
       <div class="art-glow" aria-hidden="true"></div>
@@ -232,45 +291,45 @@
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>ORDINARY BILL</span><i>◆</i><span>MONEY BILL</span><i>◆</i><span>FINANCE BILL</span><i>◆</i>
-      <span>CONSTITUTIONAL AMENDMENT</span><i>◆</i><span>NO-CONFIDENCE</span><i>◆</i><span>IMPEACHMENT</span><i>◆</i>
-      <span>ORDINARY BILL</span><i>◆</i><span>MONEY BILL</span><i>◆</i><span>FINANCE BILL</span><i>◆</i>
-      <span>CONSTITUTIONAL AMENDMENT</span><i>◆</i><span>NO-CONFIDENCE</span><i>◆</i><span>IMPEACHMENT</span><i>◆</i>
+      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>◆</i><span data-i18n="bill.money">MONEY BILL</span><i>◆</i><span data-i18n="bill.finance">FINANCE BILL</span><i>◆</i>
+      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>◆</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>◆</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>◆</i>
+      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>◆</i><span data-i18n="bill.money">MONEY BILL</span><i>◆</i><span data-i18n="bill.finance">FINANCE BILL</span><i>◆</i>
+      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>◆</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>◆</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>◆</i>
     </div>
   </div>
 
   <section class="section">
     <div class="section-head">
       <div>
-        <span class="kicker">Inside the simulator</span>
-        <h2>Procedure is the <em>game.</em></h2>
+        <span class="kicker" data-i18n="home.inside.kicker">Inside the simulator</span>
+        <h2 data-i18n-html="home.inside.title">Procedure is the <em>game.</em></h2>
       </div>
-      <p>Every click mirrors a real constitutional step. Learn by doing, not by memorising a table.</p>
+      <p data-i18n="home.inside.text">Every click mirrors a real constitutional step. Learn by doing, not by memorising a table.</p>
     </div>
     <div class="feature-grid">
       <article class="feature-card">
         <div class="feature-icon" data-icon="houses"></div>
-        <h3>Two Houses, one law</h3>
-        <p>Watch a bill travel from the Lok Sabha to the Rajya Sabha — and learn exactly where the Upper House can stall, amend or only recommend.</p>
-        <span class="feature-tag">Art. 107–109</span>
+        <h3 data-i18n="home.f1.title">Two Houses, one law</h3>
+        <p data-i18n="home.f1.text">Watch a bill travel from the Lok Sabha to the Rajya Sabha — and learn exactly where the Upper House can stall, amend or only recommend.</p>
+        <span class="feature-tag" data-i18n="home.f1.tag">Art. 107–109</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="seats"></div>
-        <h3>Live division</h3>
-        <p>543 and 245 seats light up vote by vote. See the Treasury and Opposition benches, the abstentions, and the exact threshold a bill must cross.</p>
-        <span class="feature-tag">Division · Voice · Ballot</span>
+        <h3 data-i18n="home.f2.title">Live division</h3>
+        <p data-i18n="home.f2.text">543 and 245 seats light up vote by vote. See the Treasury and Opposition benches, the abstentions, and the exact threshold a bill must cross.</p>
+        <span class="feature-tag" data-i18n="home.f2.tag">Division · Voice · Ballot</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="scales"></div>
-        <h3>Nine procedures</h3>
-        <p>Ordinary, Money and Finance Bills, constitutional amendments, no-confidence, and the removal of the President, Vice-President, Speaker and judges.</p>
-        <span class="feature-tag">Bills · Motions · Removals</span>
+        <h3 data-i18n="home.f3.title">Nine procedures</h3>
+        <p data-i18n="home.f3.text">Ordinary, Money and Finance Bills, constitutional amendments, no-confidence, and the removal of the President, Vice-President, Speaker and judges.</p>
+        <span class="feature-tag" data-i18n="home.f3.tag">Bills · Motions · Removals</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="book"></div>
-        <h3>Exam edge built in</h3>
-        <p>Every decision ends with the article, the reasoning and the trap UPSC loves. Your weak majorities are tracked so you know what to revise.</p>
-        <span class="feature-tag">UPSC Prelims + Mains</span>
+        <h3 data-i18n="home.f4.title">Exam edge built in</h3>
+        <p data-i18n="home.f4.text">Every decision ends with the article, the reasoning and the trap UPSC loves. Your weak majorities are tracked so you know what to revise.</p>
+        <span class="feature-tag" data-i18n="home.f4.tag">UPSC Prelims + Mains</span>
       </article>
     </div>
   </section>
@@ -278,10 +337,10 @@
   <section class="section">
     <div class="section-head">
       <div>
-        <span class="kicker">The order paper</span>
-        <h2>Choose a <em>session.</em></h2>
+        <span class="kicker" data-i18n="home.order.kicker">The order paper</span>
+        <h2 data-i18n-html="home.order.title">Choose a <em>session.</em></h2>
       </div>
-      <button class="btn btn-ghost btn-sm" data-nav="select">View all nine
+      <button class="btn btn-ghost btn-sm" data-nav="select"><span data-i18n="home.order.action">View all nine</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
@@ -291,10 +350,10 @@
   <section class="section majority-section">
     <div class="section-head">
       <div>
-        <span class="kicker">The majority decoder</span>
-        <h2>One bill. <em>Six different</em> majorities.</h2>
+        <span class="kicker" data-i18n="home.majority.kicker">The majority decoder</span>
+        <h2 data-i18n-html="home.majority.title">One bill. <em>Six different</em> majorities.</h2>
       </div>
-      <p>The single most examined idea in Indian polity. Hover a card to see what it unlocks.</p>
+      <p data-i18n="home.majority.text">The single most examined idea in Indian polity. Hover a card to see what it unlocks.</p>
     </div>
     <div class="majority-strip" id="majorityStrip"></div>
   </section>
@@ -303,11 +362,11 @@
     <div class="cta-band">
       <div class="cta-ornament" aria-hidden="true"></div>
       <div>
-        <span class="kicker">Ready for the floor</span>
-        <h2>The Chair is <em>yours.</em></h2>
-        <p>Nine procedures. One Constitution. Find out whether your majority math survives a division.</p>
+        <span class="kicker" data-i18n="home.cta.kicker">Ready for the floor</span>
+        <h2 data-i18n-html="home.cta.title">The Chair is <em>yours.</em></h2>
+        <p data-i18n="home.cta.text">Nine procedures. One Constitution. Find out whether your majority math survives a division.</p>
       </div>
-      <button class="btn btn-gold" data-nav="select">Enter Parliament
+      <button class="btn btn-gold" data-nav="select"><span data-i18n="home.cta.action">Enter Parliament</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
@@ -319,27 +378,27 @@
   <div class="page-head">
     <button class="back-link" data-nav="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
-      Home
+      <span data-i18n="select.back">Home</span>
     </button>
-    <span class="kicker">The order paper</span>
-    <h1>Pick your <em>procedure.</em></h1>
-    <p class="page-lede">
+    <span class="kicker" data-i18n="select.kicker">The order paper</span>
+    <h1 data-i18n-html="select.title">Pick your <em>procedure.</em></h1>
+    <p class="page-lede" data-i18n="select.lede">
       Each session is a guided simulation. You make the procedural calls, then take the Chair
       and put the question to the House. One wrong majority can change the fate of a bill.
     </p>
     <div class="filter-row" id="filterRow">
-      <button class="filter is-active" data-filter="All">All <span>9</span></button>
-      <button class="filter" data-filter="Bills">Bills <span>4</span></button>
-      <button class="filter" data-filter="Motions">Motions <span>1</span></button>
-      <button class="filter" data-filter="Removals">Removals <span>4</span></button>
+      <button class="filter is-active" data-filter="All"><span data-i18n="select.filter.all">All</span> <span class="count">9</span></button>
+      <button class="filter" data-filter="Bills"><span data-i18n="select.filter.bills">Bills</span> <span class="count">4</span></button>
+      <button class="filter" data-filter="Motions"><span data-i18n="select.filter.motions">Motions</span> <span class="count">1</span></button>
+      <button class="filter" data-filter="Removals"><span data-i18n="select.filter.removals">Removals</span> <span class="count">4</span></button>
     </div>
   </div>
   <div class="scenario-grid" id="scenarioGrid"></div>
   <div class="score-note">
     <div class="score-note-icon" data-icon="star"></div>
     <div>
-      <h3>How scoring works</h3>
-      <p>Every correct procedural call is worth <b>100 XP</b>. Calling the right majority before a division is worth <b>150 XP</b>, and finishing a session adds a <b>50 XP</b> completion bonus. Three stars need at least 90% accuracy.</p>
+      <h3 data-i18n="select.scoring.title">How scoring works</h3>
+      <p data-i18n-html="select.scoring.text">Every correct procedural call is worth <b>100 XP</b>. Calling the right majority before a division is worth <b>150 XP</b>, and finishing a session adds a <b>50 XP</b> completion bonus. Three stars need at least 90% accuracy.</p>
     </div>
   </div>
 </section>
@@ -349,7 +408,7 @@
   <div class="game-top">
     <button class="back-link" id="backToSelect">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
-      Order Paper
+      <span data-i18n="game.back">Order Paper</span>
     </button>
     <div class="game-heading">
       <span id="gameKicker">Procedure</span>
@@ -371,8 +430,8 @@
       <div class="chamber-legend" id="chamberLegend"></div>
       <div class="chamber-tally" id="chamberTally"></div>
       <div class="chamber-foot">
-        <div><span>Presiding</span><b id="presidingName">Speaker</b></div>
-        <div><span>Requirement</span><b id="chamberMajority">To be decided</b></div>
+        <div><span data-i18n="game.presiding">Presiding</span><b id="presidingName">Speaker</b></div>
+        <div><span data-i18n="game.requirement">Requirement</span><b id="chamberMajority">To be decided</b></div>
       </div>
     </aside>
 
@@ -387,20 +446,20 @@
   <div class="page-head">
     <button class="back-link" data-nav="home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
-      Home
+      <span data-i18n="learn.back">Home</span>
     </button>
-    <span class="kicker">The polity lab</span>
-    <h1>Every majority, <em>decoded.</em></h1>
-    <p class="page-lede">
+    <span class="kicker" data-i18n="learn.kicker">The polity lab</span>
+    <h1 data-i18n-html="learn.title">Every majority, <em>decoded.</em></h1>
+    <p class="page-lede" data-i18n="learn.lede">
       A field guide to the numbers that decide governments. Use it before a session, or keep it
       open while you play. Each tab targets a different Prelims trap.
     </p>
     <div class="tab-row" id="learnTabs">
-      <button class="tab is-active" data-tab="majorities">Majority Decoder</button>
-      <button class="tab" data-tab="journey">Bill Journey</button>
-      <button class="tab" data-tab="glance">At a Glance</button>
-      <button class="tab" data-tab="voting">Voting Methods</button>
-      <button class="tab" data-tab="articles">Article Index</button>
+      <button class="tab is-active" data-tab="majorities" data-i18n="learn.tab.majorities">Majority Decoder</button>
+      <button class="tab" data-tab="journey" data-i18n="learn.tab.journey">Bill Journey</button>
+      <button class="tab" data-tab="glance" data-i18n="learn.tab.glance">At a Glance</button>
+      <button class="tab" data-tab="voting" data-i18n="learn.tab.voting">Voting Methods</button>
+      <button class="tab" data-tab="articles" data-i18n="learn.tab.articles">Article Index</button>
     </div>
   </div>
   <div class="learn-body" id="learnBody"></div>
@@ -417,16 +476,16 @@
         <span>The Mock Parliament</span>
       </div>
     </div>
-    <p>An educational simulation of Indian parliamentary procedure, built for UPSC aspirants. All parties, names and vote counts are illustrative.</p>
+    <p data-i18n="footer.about">An educational simulation of Indian parliamentary procedure, built for UPSC aspirants. All parties, names and vote counts are illustrative.</p>
     <div class="footer-links">
-      <button data-nav="home">Home</button>
-      <button data-nav="select">Order Paper</button>
-      <button data-nav="learn">Polity Lab</button>
+      <button data-nav="home" data-i18n="footer.links.home">Home</button>
+      <button data-nav="select" data-i18n="footer.links.order">Order Paper</button>
+      <button data-nav="learn" data-i18n="footer.links.lab">Polity Lab</button>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>Not an official publication. Procedures simplified for pedagogy — always cross-check with the Constitution and current rules of procedure.</span>
-    <span>Made with care for the Constitution of India.</span>
+    <span data-i18n="footer.disclaimer">Not an official publication. Procedures simplified for pedagogy — always cross-check with the Constitution and current rules of procedure.</span>
+    <span data-i18n="footer.credit">Made with care for the Constitution of India.</span>
   </div>
 </footer>
 
@@ -434,6 +493,10 @@
 <noscript><div class="noscript">This simulator needs JavaScript enabled to run the Parliament.</div></noscript>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/i18n-hi.js"></script>
+<script src="assets/js/i18n-hinglish.js"></script>
+<script src="assets/js/audio.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>
