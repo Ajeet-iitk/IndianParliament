@@ -2490,3 +2490,24 @@ html[data-emergency="true"] {
 @media (prefers-reduced-motion: reduce) {
   .em-chain .lock, .em-date-card::before, .em-date-card::after { animation: none; }
 }
+
+/* Padlock hint + break animation */
+.em-chain .lock { cursor: pointer; padding: 0; font: inherit; touch-action: manipulation; position: relative; }
+.em-chain .lock:hover { box-shadow: 0 0 30px rgba(255, 60, 60, .55); }
+.em-chain.is-broken .lock { cursor: default; }
+.em-chain .lock[data-tip]::after {
+  content: attr(data-tip); position: absolute; bottom: calc(100% + 12px); left: 50%;
+  transform: translate(-50%, 4px); width: max-content; max-width: min(260px, 80vw);
+  padding: 8px 12px; border-radius: 10px; text-align: center; white-space: normal;
+  background: #1c0408; color: #ffd2d2; border: 1px solid rgba(255, 90, 90, .5);
+  font: 700 .66rem/1.4 var(--body); letter-spacing: .02em;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .6); opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s;
+}
+.em-chain.is-broken .lock[data-tip]::after { border-color: rgba(232, 182, 103, .55); color: #f7d59c; }
+.em-chain .lock:hover::after, .em-chain .lock:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+.em-chain.just-broke .lock { animation: lockBreak 1s var(--ease); }
+.em-chain.just-broke .ch:first-child { animation: linkLeft 1s var(--ease); }
+.em-chain.just-broke .ch:last-child { animation: linkRight 1s var(--ease); }
+@keyframes lockBreak { 0% { transform: scale(1.25) rotate(-12deg); } 30% { transform: scale(1.35) rotate(14deg); } 100% { transform: none; } }
+@keyframes linkLeft { 0% { transform: translateX(14px); } 100% { transform: none; } }
+@keyframes linkRight { 0% { transform: translateX(-14px); } 100% { transform: none; } }

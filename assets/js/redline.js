@@ -194,14 +194,15 @@ const SansadRedline = (function () {
   let active = null;
   let submitted = false;
   let best = 0;
+  let freed = false;
 
   try {
     const raw = localStorage.getItem(STORE_KEY);
-    if (raw) best = Math.max(0, parseInt(JSON.parse(raw).best, 10) || 0);
+    if (raw) { const d = JSON.parse(raw); best = Math.max(0, parseInt(d.best, 10) || 0); freed = !!d.freed; }
   } catch (_) { /* ignore */ }
 
   function saveBest() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify({ best })); } catch (_) { /* ignore */ }
+    try { localStorage.setItem(STORE_KEY, JSON.stringify({ best, freed })); } catch (_) { /* ignore */ }
   }
 
   function play(name) { if (Audio && Audio.play) Audio.play(name); }
@@ -280,8 +281,8 @@ const SansadRedline = (function () {
       </div>
     </div>`;
 
-    const freed = submitted && score() >= 9;
-    h += `<div class="rl-shackle${freed ? " is-snapped" : ""}" aria-hidden="true"><i class="ch"></i><span class="lock">${freed ? UNLOCK_SVG : LOCK_SVG}</span><i class="ch"></i></div>`;
+    const snapped = freed || (submitted && score() >= 9);
+    h += `<div class="rl-shackle${snapped ? " is-snapped" : ""}" aria-hidden="true"><i class="ch"></i><span class="lock">${snapped ? UNLOCK_SVG : LOCK_SVG}</span><i class="ch"></i></div>`;
     h += `<div class="rl-paper" lang="en">`;
     h += `<div class="rl-paper-head"><span>The Constitution of India</span><span>${t("redline.paper.rev")}</span></div>`;
     CLAUSES.forEach((c) => {
@@ -320,6 +321,28 @@ const SansadRedline = (function () {
       </div>`;
     }
     root.innerHTML = h;
+    syncLocks();
+  }
+
+  /* Every padlock in the Emergency section: hint until freed, broken after */
+  function syncLocks() {
+    document.querySelectorAll(".em-chain").forEach((box) => {
+      const btn = box.querySelector("[data-lock]");
+      box.classList.toggle("is-broken", freed);
+      if (!btn) return;
+      const tip = freed ? t("redline.lock.freed") : t("redline.lock.tip");
+      btn.setAttribute("data-tip", tip);
+      btn.setAttribute("aria-label", tip);
+      btn.removeAttribute("title");
+      btn.innerHTML = freed ? UNLOCK_SVG : LOCK_SVG;
+    });
+  }
+
+  function onLockClick() {
+    if (freed) return;
+    play("click");
+    const target = document.getElementById("redline");
+    if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   /* ---------------- interaction ---------------- */
@@ -342,10 +365,14 @@ const SansadRedline = (function () {
     } else if (act.dataset.act === "pass") {
       submitted = true; active = null;
       const s = score();
-      if (s > best) { best = s; saveBest(); }
+      if (s > best) best = s;
+      const justFreed = s >= 9 && !freed;
+      if (justFreed) freed = true;
+      saveBest();
       play("gavel");
       setTimeout(() => play(s >= 9 ? "correct" : "wrong"), 260);
       render();
+      if (justFreed) document.querySelectorAll(".em-chain").forEach((b) => { b.classList.add("just-broke"); setTimeout(() => b.classList.remove("just-broke"), 1400); });
       const res = root.querySelector(".rl-result");
       if (res) res.scrollIntoView({ behavior: "smooth", block: "center" });
     } else if (act.dataset.act === "again") {
@@ -360,6 +387,7 @@ const SansadRedline = (function () {
       root = document.getElementById("rlApp");
       if (!root) return;
       root.addEventListener("click", onClick);
+      document.querySelectorAll("[data-lock]").forEach((b) => b.addEventListener("click", onLockClick));
       render();
     },
     refreshLanguage() { render(); }

@@ -206,6 +206,8 @@ const I18N = {
       "redline.best": "Best",
       "redline.takeaway": "The lesson: Janata repaired judicial review, the Lok Sabha’s term and Emergency powers by amendment. Other red marks — the Preamble words, Fundamental Duties — stayed. The two most sweeping ones, Articles 31C and 368, were finally struck down by the Supreme Court in Minerva Mills (1980).",
       "redline.again": "Redraft the Bill",
+      "redline.lock.tip": "Locked — play the Redline game to break the chains",
+      "redline.lock.freed": "Chains broken — the Constitution is free",
 
       "nav.home": "Home",
       "nav.order": "Order Paper",
@@ -707,6 +709,8 @@ const I18N = {
       "redline.best": "सर्वश्रेष्ठ",
       "redline.takeaway": "सबक: जनता सरकार ने न्यायिक समीक्षा, लोकसभा का कार्यकाल और आपातकालीन शक्तियाँ संशोधन से सुधारीं। प्रस्तावना के शब्द और मौलिक कर्तव्य बने रहे। सबसे व्यापक अनुच्छेद 31C और 368 को सर्वोच्च न्यायालय ने मिनर्वा मिल्स (1980) में रद्द किया।",
       "redline.again": "विधेयक दोबारा बनाएँ",
+      "redline.lock.tip": "ताला बंद — ज़ंजीरें तोड़ने के लिए रेडलाइन गेम खेलें",
+      "redline.lock.freed": "ज़ंजीरें टूट गईं — संविधान मुक्त है",
 
       "nav.home": "होम",
       "nav.order": "कार्यसूची",
@@ -1208,6 +1212,8 @@ const I18N = {
       "redline.best": "Best",
       "redline.takeaway": "Sabak: Janata ne judicial review, Lok Sabha ka term aur Emergency powers amendment se theek kiye. Preamble ke words aur Fundamental Duties bane rahe. Sabse vyapak Articles 31C aur 368 ko Supreme Court ne Minerva Mills (1980) mein radd kiya.",
       "redline.again": "Bill dobara banayein",
+      "redline.lock.tip": "Locked — chains todne ke liye Redline game khelein",
+      "redline.lock.freed": "Chains toot gayi — Constitution azaad hai",
 
       "nav.home": "Home",
       "nav.order": "Order Paper",
