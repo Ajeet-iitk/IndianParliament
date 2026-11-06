@@ -9,6 +9,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const Audio = typeof SansadAudio !== "undefined" ? SansadAudio : null;
+  const Roaches = typeof SansadRoaches !== "undefined" ? SansadRoaches : null;
   const STORE_KEY = "sansad.progress.v1";
   const LANG_KEY = "sansad.lang.v1";
   const THEME_KEY = "sansad.theme.v1";
@@ -227,17 +228,35 @@
      Navigation
      ---------------------------------------------------------- */
   let currentFilter = "All";
+  let currentScreen = "home";
+  let roachBuffer = "";
 
   function navigate(name) {
+    currentScreen = name;
+    document.body.classList.toggle("is-roaching", name === "roaches");
+    if (name === "roaches") {
+      if (Roaches) {
+        Roaches.setT(t);
+        Roaches.setReduced(reduceMotion);
+        Roaches.enter();
+      }
+      document.title = t("roach.meta.title");
+    } else if (Roaches) {
+      Roaches.leave();
+    }
+
     $$(".screen").forEach((s) => s.classList.toggle("is-active", s.dataset.screen === name));
     $$(".nav-link, .dock-link").forEach((b) => b.classList.toggle("is-active", b.dataset.nav === name));
     window.scrollTo(0, 0);
+    sound("whoosh");
     if (name === "select") renderScenarioGrid();
     if (name === "learn") renderLearn();
     if (name === "home") {
       document.title = t("meta.title");
       renderFeatured();
       updateStats();
+    } else if (name !== "roaches" && name !== "game") {
+      document.title = t("meta.title");
     }
   }
 
@@ -1127,6 +1146,7 @@
     try { localStorage.setItem(MOTION_KEY, reduceMotion ? "1" : "0"); } catch (_) {}
     const motion = $("#motionToggle");
     if (motion) motion.checked = reduceMotion;
+    if (Roaches) Roaches.setReduced(reduceMotion);
     toast(t(reduceMotion ? "toast.motion" : "toast.motionOff"));
   }
 
@@ -1185,10 +1205,18 @@
     renderLearn(currentTab);
     updateStats();
 
+    if (Roaches) {
+      Roaches.setT(t);
+      Roaches.setReduced(reduceMotion);
+      Roaches.refreshLanguage();
+    }
+
     if (game) {
       document.title = t("meta.game", { name: locScenario(game.scenario).title });
       setGameHeader();
       rerenderGamePhase();
+    } else if (currentScreen === "roaches") {
+      document.title = t("roach.meta.title");
     } else {
       document.title = t("meta.title");
     }
@@ -1218,6 +1246,12 @@
     renderMajorityStrip();
     renderLearn("majorities");
     updateStats();
+
+    if (Roaches) {
+      Roaches.setT(t);
+      Roaches.setReduced(reduceMotion);
+      Roaches.init();
+    }
 
     if (Audio) {
       Audio.configure(audioPrefs);
@@ -1321,6 +1355,21 @@
     });
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closePopovers();
+    });
+
+    /* Easter egg: type "roach" anywhere outside a form field */
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      const tag = (e.target && e.target.tagName ? e.target.tagName : "").toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select" || (e.target && e.target.isContentEditable)) return;
+      if (!e.key || e.key.length !== 1) return;
+      roachBuffer = (roachBuffer + e.key.toLowerCase()).slice(-5);
+      if (roachBuffer === "roach" && currentScreen !== "roaches") {
+        roachBuffer = "";
+        navigate("roaches");
+        toast(t("roach.kicker"));
+        if (Audio) Audio.play("buzz");
+      }
     });
 
     document.addEventListener("click", (e) => {

@@ -126,7 +126,8 @@ const ICONS = {
   houses: '<path d="M3 21V9l6-5 6 5v12"/><path d="M15 21V12l6-4v13"/><path d="M7 21v-5h4v5"/>',
   seats: '<path d="M4 12a8 8 0 0 1 16 0"/><path d="M4 12v4M20 12v4"/><circle cx="8" cy="9" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="16" cy="9" r="1"/>',
   star: '<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9z"/>',
-  shield: '<path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>'
+  shield: '<path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  spray: '<path d="M9 8h6v13H9z"/><path d="M11 8V5h4v3"/><path d="M18 4h2M18 8h2M18 12h2M18 16h2"/>'
 };
 
 /* ------------------------------------------------------------

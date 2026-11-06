@@ -26,7 +26,9 @@ An interactive UPSC Polity simulator where you take the Chair and run the Indian
 - **Polity Lab** — a built-in reference for the two Houses, majority types, voting methods, and the legislative route of each bill type.
 - **Three languages, switchable mid-session** — English, हिन्दी and Hinglish. Every scenario, option, explanation, verdict and reference table is translated; changing language in the middle of a run keeps your score and current step intact.
 - **Day and night themes** — a warm sandstone daylight palette and the original dark navy chamber, with the choice remembered on your next visit.
-- **Sound, music and motion** — an original Web Audio score (tanpura drone or cinematic pad), gavel, division bell, vote ticks, chimes and applause. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
+- **Living motion** — the hero tricolour ripples through an SVG displacement filter, a public-gallery band sways with citizens, hand-held flags and walking figures, and silhouettes pace inside the chamber.
+- **Secret Cockroaches game** — type `roach` anywhere, tap the little scuttling bug, or use the footer link. Survive a sixty-second Gen Z infestation by crushing roaches, spraying them back, and passing reforms to clear the floor. Scores and best runs are stored separately from scenario XP.
+- **Sound, music and motion** — an original Web Audio score (tanpura drone or cinematic pad), gavel, division bell, vote ticks, chimes and applause, plus new whoosh, spray, squish, skitter, breach, buzz, combo, reform, victory and defeat effects. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
 - **Responsive and cinematic** — custom SVG Parliament artwork, serif display type, ambient dust, card entrances, vote-count animations and confetti, with a mobile bottom dock.
 
 ## Controls
@@ -37,6 +39,10 @@ An interactive UPSC Polity simulator where you take the Chair and run the Indian
 | Sun / moon button | Toggles day and night themes |
 | Speaker button | Opens music, effects, volume, score-style and reduced-motion settings |
 | `XP` pill | Shown on wide screens; tracks experience across all simulations |
+| Type `roach` | Opens the secret Cockroaches game from anywhere outside a form field |
+| Footer 🪳 / floating bug | Also opens the Cockroaches game |
+| `1` / `2` (in game) | Select the crush or spray tool |
+| `C` / `S` / `R` (in game) | Crush the nearest roach, spray the centre, or pass a reform |
 
 Preferences are stored in `localStorage`, so language, theme and audio settings survive a reload. On a first visit, music starts only after an interaction, as browsers require.
 
@@ -74,6 +80,7 @@ IndianParliament/
 │       ├── i18n-hi.js          # Hindi content overlay
 │       ├── i18n-hinglish.js    # Hinglish content overlay
 │       ├── audio.js            # Web Audio music and sound-effect engine
+│       ├── roaches.js          # Secret Cockroaches easter-egg game
 │       └── app.js              # Navigation, localisation, chamber rendering, game engine
 └── shots/                      # Development screenshots (not required to run)
 ```
@@ -97,6 +104,7 @@ This is an educational simulation, not an official source. For the authoritative
 - Keyboard-reachable controls with visible focus states and ARIA labels.
 - Day mode raises text contrast for bright rooms; night mode keeps the original chamber palette.
 - A **Reduce motion** switch disables ambient, entrance and celebration animations, and `prefers-reduced-motion` is respected automatically.
+- The Cockroaches game is playable with the pointer or with `1` / `2` / `C` / `S` / `R`.
 - Audio is opt-out: music and effects can each be muted, and volume is adjustable.
 - All navigation works without sound or animation.
 

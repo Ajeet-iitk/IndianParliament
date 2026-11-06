@@ -257,6 +257,70 @@ const SansadAudio = (function () {
         });
         break;
 
+      case "whoosh":
+        noise({ dur: 0.34, gain: 0.032, filter: "lowpass", freq: 240, freqEnd: 2400, q: 0.7 });
+        noise({ dur: 0.26, gain: 0.022, filter: "bandpass", freq: 1800, freqEnd: 320, q: 0.8, delay: 0.16 });
+        tone({ freq: 180, glide: 90, dur: 0.3, type: "sine", gain: 0.02 });
+        break;
+
+      case "spray":
+        noise({ dur: 0.46, gain: 0.05, filter: "highpass", freq: 3000, freqEnd: 900, q: 0.5 });
+        noise({ dur: 0.2, gain: 0.025, filter: "highpass", freq: 4600, q: 0.4, delay: 0.04 });
+        tone({ freq: 820, glide: 460, dur: 0.16, type: "triangle", gain: 0.014 });
+        break;
+
+      case "squish":
+        tone({ freq: 140, glide: 48, dur: 0.13, type: "sine", gain: 0.13, attack: 0.004 });
+        noise({ dur: 0.09, gain: 0.075, filter: "lowpass", freq: 700, q: 0.7 });
+        tone({ freq: 320, glide: 90, dur: 0.08, type: "triangle", gain: 0.03, delay: 0.01 });
+        break;
+
+      case "skitter":
+        [0, 0.035, 0.06, 0.095, 0.13, 0.17].forEach((delay, i) => {
+          noise({ dur: 0.022, gain: 0.012 + (i % 2) * 0.004, filter: "highpass", freq: 3200 + i * 260, q: 0.6, delay });
+        });
+        break;
+
+      case "breach":
+        tone({ freq: 76, glide: 38, dur: 0.55, type: "sine", gain: 0.18, attack: 0.004 });
+        noise({ dur: 0.4, gain: 0.075, filter: "lowpass", freq: 620, q: 0.6 });
+        tone({ freq: 300, glide: 78, dur: 0.32, type: "sawtooth", gain: 0.04, delay: 0.03, filter: "lowpass", filterFreq: 900 });
+        break;
+
+      case "buzz":
+        tone({ freq: 168, dur: 0.24, type: "sawtooth", gain: 0.022, filter: "bandpass", filterFreq: 780, q: 4 });
+        tone({ freq: 183, dur: 0.22, type: "sawtooth", gain: 0.018, delay: 0.02, filter: "bandpass", filterFreq: 920, q: 4 });
+        break;
+
+      case "combo":
+        [784, 1046.5, 1318.5].forEach((freq, i) => {
+          tone({ freq, dur: 0.12, type: "triangle", gain: 0.04, delay: i * 0.055 });
+        });
+        break;
+
+      case "reform":
+        noise({ dur: 0.6, gain: 0.025, filter: "lowpass", freq: 280, freqEnd: 3200, q: 0.6 });
+        [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((freq, i) => {
+          tone({ freq, dur: 0.8 + i * 0.08, type: "sine", gain: 0.038, delay: i * 0.08, attack: 0.008 });
+        });
+        tone({ freq: 96, glide: 52, dur: 0.22, type: "sine", gain: 0.1, delay: 0.1 });
+        break;
+
+      case "victory":
+        [523.25, 659.25, 783.99, 1046.5, 1318.5, 1567.98].forEach((freq, i) => {
+          tone({ freq, dur: 0.46, type: "triangle", gain: 0.04, delay: i * 0.12 });
+          tone({ freq: freq * 2, dur: 0.3, type: "sine", gain: 0.014, delay: i * 0.12 + 0.02 });
+        });
+        noise({ dur: 0.9, gain: 0.02, filter: "highpass", freq: 2400, q: 0.5, delay: 0.2 });
+        break;
+
+      case "defeat":
+        [392, 349.23, 293.66, 220].forEach((freq, i) => {
+          tone({ freq, dur: 0.55, type: "triangle", gain: 0.045, delay: i * 0.18 });
+          tone({ freq: freq * 0.5, dur: 0.65, type: "sine", gain: 0.03, delay: i * 0.18 + 0.02 });
+        });
+        break;
+
       default:
         tone({ freq: 600, dur: 0.08, type: "sine", gain: 0.03 });
     }
