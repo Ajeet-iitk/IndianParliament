@@ -233,6 +233,13 @@
 
   function navigate(name) {
     currentScreen = name;
+    const isEmergency = name === "emergency";
+    if (isEmergency) {
+      document.documentElement.dataset.emergency = "true";
+    } else {
+      delete document.documentElement.dataset.emergency;
+    }
+    syncThemeColor();
     document.body.classList.toggle("is-roaching", name === "roaches");
     if (name === "roaches") {
       if (Roaches) {
@@ -255,11 +262,15 @@
       renderSimulator();
       document.title = t("sim.meta.title");
     }
+    if (name === "emergency") {
+      document.title = t("emergency.meta.title");
+      sound("alarm");
+    }
     if (name === "home") {
       document.title = t("meta.title");
       renderFeatured();
       updateStats();
-    } else if (name !== "roaches" && name !== "game" && name !== "simulator") {
+    } else if (name !== "roaches" && name !== "game" && name !== "simulator" && name !== "emergency") {
       document.title = t("meta.title");
     }
   }
@@ -1110,12 +1121,18 @@
     $$("[aria-expanded]").forEach((b) => b.setAttribute("aria-expanded", "false"));
   }
 
+  function syncThemeColor() {
+    const meta = $("#themeColor");
+    if (!meta) return;
+    const emergency = document.documentElement.dataset.emergency === "true";
+    meta.setAttribute("content", emergency ? "#120204" : theme === "day" ? "#f5efe3" : "#070b17");
+  }
+
   function setTheme(next) {
     theme = next === "day" ? "day" : "night";
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
-    const meta = $("#themeColor");
-    if (meta) meta.setAttribute("content", theme === "day" ? "#f5efe3" : "#070b17");
+    syncThemeColor();
     closePopovers();
     toast(t(theme === "day" ? "toast.day" : "toast.night"));
     sound("click");
@@ -1681,6 +1698,8 @@
       document.title = t("roach.meta.title");
     } else if (currentScreen === "simulator") {
       document.title = t("sim.meta.title");
+    } else if (currentScreen === "emergency") {
+      document.title = t("emergency.meta.title");
     } else {
       document.title = t("meta.title");
     }
@@ -1697,8 +1716,7 @@
   function init() {
     document.documentElement.dataset.theme = theme;
     document.documentElement.dataset.motion = reduceMotion ? "reduced" : "full";
-    const meta = $("#themeColor");
-    if (meta) meta.setAttribute("content", theme === "day" ? "#f5efe3" : "#070b17");
+    syncThemeColor();
 
     $$(".chakra").forEach((el) => { el.innerHTML = chakraSVG(); });
     $$("[data-icon]").forEach((el) => { el.innerHTML = iconSVG(el.dataset.icon); });

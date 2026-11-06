@@ -321,6 +321,12 @@ const SansadAudio = (function () {
         });
         break;
 
+      case "alarm":
+        tone({ freq: 220, glide: 110, dur: 0.9, type: "sawtooth", gain: 0.05, filter: "lowpass", filterFreq: 700, q: 1.2, attack: 0.05 });
+        tone({ freq: 164, glide: 82, dur: 1.1, type: "sine", gain: 0.045, delay: 0.12, attack: 0.04 });
+        noise({ dur: 1.2, gain: 0.015, filter: "bandpass", freq: 300, freqEnd: 220, q: 0.8, attack: 0.2 });
+        break;
+
       case "conch":
         tone({ freq: 196, glide: 294, dur: 1.15, type: "sawtooth", gain: 0.045, filter: "lowpass", filterFreq: 900, q: 1.4, attack: 0.09 });
         tone({ freq: 392, glide: 587, dur: 0.95, type: "sine", gain: 0.028, delay: 0.08, attack: 0.08 });
