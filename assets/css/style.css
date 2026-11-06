@@ -2695,3 +2695,59 @@ html[data-emergency="true"] {
   .speaker-hud { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 12px 0; }
   .sstat-suspended { display: none; }
 }
+
+/* ============================================================
+   Mobile nav + Speaker game (final pass)
+   ============================================================ */
+@media (max-width: 760px) {
+  /* top bar: never let brand and controls collide */
+  .site-nav { gap: 8px; }
+  .brand { min-width: 0; gap: 9px; flex: 1 1 auto; }
+  .brand-text { min-width: 0; }
+  .brand-text strong { font-size: 1.25rem; letter-spacing: .14em; white-space: nowrap; }
+  .nav-actions { flex: none; gap: 6px; }
+
+  /* bottom dock: full-width icon bar, six equal slots */
+  .mobile-dock {
+    left: 10px; right: 10px; width: auto; max-width: none; transform: none;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 2px;
+    padding: 5px; border-radius: 22px; overflow: visible;
+  }
+  .dock-link {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    padding: 7px 2px 6px; min-width: 0; border-radius: 16px;
+    font-size: .56rem; font-weight: 700; letter-spacing: .01em; line-height: 1.1;
+  }
+  .dock-link svg { width: 20px; height: 20px; flex: none; }
+  .dock-link span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  body { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .toast { bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+}
+
+@media (max-width: 980px) {
+  .speaker-pause { top: 10px; left: 10px; }
+  .speaker-tools { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .speaker-adjourn { grid-column: auto; flex-direction: column; align-items: center; }
+}
+@media (max-width: 760px) {
+  .speaker-screen { padding-left: 14px; padding-right: 14px; }
+  .speaker-top { gap: 8px 12px; }
+  .speaker-heading { min-width: 0; flex: 1 1 140px; }
+  .speaker-heading h2 { font-size: 1.7rem; }
+  .speaker-hud { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; margin: 10px 0; }
+  .sstat { padding: 7px 8px; border-radius: 12px; }
+  .sstat span { font-size: .48rem; letter-spacing: .1em; }
+  .sstat b { font-size: 1.1rem; }
+  .speaker-arena { height: clamp(320px, 52dvh, 460px); }
+  .speaker-tool { padding: 9px 4px; border-radius: 12px; }
+  .speaker-tool .st-icon { width: 28px; height: 28px; font-size: .95rem; }
+  .speaker-help { font-size: .64rem; }
+  .speaker-overlay .roach-card { padding: 16px 14px; }
+  .speaker-overlay .roach-card h3 { font-size: 1.6rem; }
+  .speaker-overlay .roach-rules li { font-size: .62rem; }
+}
+@media (max-width: 380px) {
+  .speaker-tool .st-copy b { font-size: .58rem; }
+  .brand-text strong { font-size: 1.1rem; letter-spacing: .1em; }
+}
