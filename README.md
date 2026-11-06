@@ -22,13 +22,14 @@ An interactive UPSC Polity simulator where you take the Chair and run the Indian
 - **Choose the voting method** — voice vote, division, electronic voting, secret ballot, or ballot, with the correct method taught in context.
 - **Pick the majority** — simple, effective, absolute, special majority (with and without state ratification), and the special majority · dual test used for judge removal.
 - **Watch the House vote** — an animated 543-seat Lok Sabha, 245-seat Rajya Sabha, or 788-seat joint sitting hemicycle counts the ayes and noes live.
+- **Historical Parliament simulator** — travel through all 18 Lok Sabhas from 1952 to 2024. The chamber resizes to that year's real seat totals, you choose the Treasury, Opposition or crossbench, pick a motion that is admissible in that House, and see whether the Constitution's arithmetic would have carried it. Ten motions cover ordinary, Money and Finance Bills, confidence and no-confidence, constitutional amendment, impeachment, and the removal of the Vice-President, Speaker or a judge.
 - **Score and progress** — 3-star accuracy tiers, XP, streaks, best scores and completed scenarios saved in `localStorage`.
 - **Polity Lab** — a built-in reference for the two Houses, majority types, voting methods, and the legislative route of each bill type.
 - **Three languages, switchable mid-session** — English, हिन्दी and Hinglish. Every scenario, option, explanation, verdict and reference table is translated; changing language in the middle of a run keeps your score and current step intact.
 - **Day and night themes** — a warm sandstone daylight palette and the original dark navy chamber, with the choice remembered on your next visit.
 - **Living motion** — the hero tricolour ripples through an SVG displacement filter, a public-gallery band sways with citizens, hand-held flags and walking figures, and silhouettes pace inside the chamber.
 - **Secret Cockroaches game** — type `roach` anywhere, tap the little scuttling bug, or use the footer link. Survive a sixty-second Gen Z infestation by crushing roaches, spraying them back, and passing reforms to clear the floor. Scores and best runs are stored separately from scenario XP.
-- **Sound, music and motion** — an original Web Audio score (tanpura drone or cinematic pad), gavel, division bell, vote ticks, chimes and applause, plus new whoosh, spray, squish, skitter, breach, buzz, combo, reform, victory and defeat effects. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
+- **Sound, music and motion** — four original Web Audio scores (tanpura drone, cinematic pad, a Desh march and an instrumental Vande Mataram), gavel, division bell, vote ticks, chimes and applause, plus whoosh, spray, squish, skitter, breach, buzz, combo, reform, conch, dhol, victory and defeat effects. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
 - **Responsive and cinematic** — custom SVG Parliament artwork, serif display type, ambient dust, card entrances, vote-count animations and confetti, with a mobile bottom dock.
 
 ## Controls
@@ -76,6 +77,7 @@ IndianParliament/
 │   ├── img/preview.jpg         # README preview
 │   └── js/
 │       ├── data.js             # Canonical English scenarios, majorities, voting, Polity Lab
+│       ├── history.js          # 1952–2024 seat totals, floor motions, historical sources
 │       ├── i18n.js             # UI dictionaries for English, Hindi and Hinglish
 │       ├── i18n-hi.js          # Hindi content overlay
 │       ├── i18n-hinglish.js    # Hinglish content overlay
@@ -96,6 +98,10 @@ The simulator is written for exam revision and follows the constitutional provis
 - Vice-President's removal: Rajya Sabha initiates, Lok Sabha concurs, effective majority (Art. 67(b)).
 - Speaker's removal: Lok Sabha only, effective majority; the Speaker may speak and vote in the first instance but cannot exercise a casting vote on their own removal (Art. 94, 96).
 - Judge removal: special majority of each House plus the addresses procedure (Art. 124(4)–(5)).
+
+### Historical data
+
+The History simulator covers the 1st to 18th Lok Sabha (1952–2024). Chamber sizes and seat totals come from the Election Commission of India's statistical reports and the Rajya Sabha Secretariat's *Statistical Information 1952–2018*. Party-bloc strengths are rounded and illustrative, and the interface says so: the teaching point is the majority arithmetic, not an exact historical party tally. Both sources are linked from the simulator footer.
 
 This is an educational simulation, not an official source. For the authoritative text, consult the Constitution of India and the Rules of Procedure of the two Houses.
 

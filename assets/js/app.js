@@ -251,11 +251,15 @@
     sound("whoosh");
     if (name === "select") renderScenarioGrid();
     if (name === "learn") renderLearn();
+    if (name === "simulator") {
+      renderSimulator();
+      document.title = t("sim.meta.title");
+    }
     if (name === "home") {
       document.title = t("meta.title");
       renderFeatured();
       updateStats();
-    } else if (name !== "roaches" && name !== "game") {
+    } else if (name !== "roaches" && name !== "game" && name !== "simulator") {
       document.title = t("meta.title");
     }
   }
@@ -326,13 +330,8 @@
      ---------------------------------------------------------- */
   const seatCache = {};
 
-  function getSeats(key) {
-    if (seatCache[key]) return seatCache[key];
-    const total = HOUSE_INFO[key].total;
-    const rows = key === "JOINT" ? 13 : 11;
+  function buildSeatLayout(total, rows, rMin, rMax) {
     const cx = 320, cy = 330;
-    const rMin = key === "JOINT" ? 64 : 78;
-    const rMax = key === "JOINT" ? 298 : 296;
     const radii = [];
     for (let i = 0; i < rows; i++) radii.push(rMin + (rMax - rMin) * (i / (rows - 1)));
 
@@ -386,8 +385,17 @@
       };
     }
 
-    seatCache[key] = seats;
     return seats;
+  }
+
+  function getSeats(key) {
+    if (seatCache[key]) return seatCache[key];
+    const total = HOUSE_INFO[key].total;
+    const rows = key === "JOINT" ? 13 : 11;
+    const rMin = key === "JOINT" ? 64 : 78;
+    const rMax = key === "JOINT" ? 298 : 296;
+    seatCache[key] = buildSeatLayout(total, rows, rMin, rMax);
+    return seatCache[key];
   }
 
   function renderChamber(key, opts) {
@@ -1193,6 +1201,459 @@
     }
   }
 
+  /* ----------------------------------------------------------
+     Historical simulator
+     ---------------------------------------------------------- */
+  const simSeatCache = {};
+  const simState = {
+    yearIndex: 17,
+    house: "LS",
+    side: "treasury",
+    motion: "ordinary",
+    align: "withMover",
+    tested: false,
+    lastVote: null
+  };
+
+  const SIM_ALIGN_LABELS = {
+    withMover: "sim.align.valueWithMover",
+    againstMover: "sim.align.valueAgainstMover",
+    abstain: "sim.align.valueAbstain",
+    treasury: "sim.align.valueBackTreasury",
+    opposition: "sim.align.valueBackOpposition",
+    neither: "sim.align.valueNeither"
+  };
+
+  function simTerm() {
+    const terms = typeof PARLIAMENT_TERMS !== "undefined" ? PARLIAMENT_TERMS : [];
+    const i = Math.max(0, Math.min(terms.length - 1, simState.yearIndex));
+    return terms[i];
+  }
+
+  function simComposition() {
+    const term = simTerm();
+    if (!term) return { total: 0, treasury: 0, opposition: 0, other: 0 };
+    return term[simState.house === "RS" ? "rs" : "ls"];
+  }
+
+  function simApplicableMotions() {
+    if (typeof FLOOR_MOTIONS === "undefined") return [];
+    return FLOOR_MOTIONS.filter((m) => m.houses.indexOf(simState.house) !== -1);
+  }
+
+  function simSelectedMotion() {
+    const list = simApplicableMotions();
+    return list.find((m) => m.id === simState.motion) || list[0] || null;
+  }
+
+  function simMotionName(motion) {
+    return motion ? t(motion.nameKey || ("sim.motion." + motion.id + ".name")) : "";
+  }
+
+  function simMotionDesc(motion) {
+    return motion ? t(motion.descKey || ("sim.motion." + motion.id + ".desc")) : "";
+  }
+
+  function simMoverAllowed(motion) {
+    if (!motion) return false;
+    return motion.mover === "any" || motion.mover === simState.side;
+  }
+
+  function simReset() {
+    simState.tested = false;
+    simState.lastVote = null;
+  }
+
+  function simCounts() {
+    const comp = simComposition();
+    let ayes = 0, noes = 0, abstain = 0;
+
+    if (simState.side === "treasury") {
+      ayes = comp.treasury;
+      noes = comp.opposition;
+      if (simState.align === "withMover") ayes += comp.other;
+      else if (simState.align === "againstMover") noes += comp.other;
+      else abstain = comp.other;
+    } else if (simState.side === "opposition") {
+      ayes = comp.opposition;
+      noes = comp.treasury;
+      if (simState.align === "withMover") ayes += comp.other;
+      else if (simState.align === "againstMover") noes += comp.other;
+      else abstain = comp.other;
+    } else {
+      ayes = comp.other;
+      if (simState.align === "treasury") {
+        ayes += comp.treasury;
+        noes = comp.opposition;
+      } else if (simState.align === "opposition") {
+        ayes += comp.opposition;
+        noes = comp.treasury;
+      } else {
+        noes = comp.treasury + comp.opposition;
+      }
+    }
+
+    return {
+      total: comp.total,
+      ayes: ayes,
+      noes: noes,
+      abstain: abstain,
+      voting: ayes + noes
+    };
+  }
+
+  function buildSimStatuses(counts) {
+    const arr = [];
+    for (let i = 0; i < counts.ayes; i++) arr.push("aye");
+    for (let i = 0; i < counts.abstain; i++) arr.push("abstain");
+    for (let i = 0; i < counts.noes; i++) arr.push("no");
+    return arr;
+  }
+
+  function getSimSeats(total) {
+    const key = "SIM_" + total;
+    if (simSeatCache[key]) return simSeatCache[key];
+    const rows = total > 420 ? 11 : total > 300 ? 10 : 9;
+    simSeatCache[key] = buildSeatLayout(total, rows, 76, 296);
+    return simSeatCache[key];
+  }
+
+  function animateSimTally() {
+    $$("#simTally [data-count]").forEach((el) => {
+      const target = parseInt(el.dataset.count, 10) || 0;
+      const start = performance.now();
+      const duration = 1150;
+      function frame(now) {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.round(target * eased);
+        if (p < 1) requestAnimationFrame(frame);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  function renderSimChamber(comp, statuses, counts) {
+    const total = comp.total;
+    const seats = getSimSeats(total).slice().sort((a, b) => a.angle - b.angle);
+    let classes;
+
+    if (statuses) {
+      classes = statuses.slice();
+    } else {
+      classes = [];
+      for (let i = 0; i < comp.treasury; i++) classes.push("treasury");
+      for (let i = 0; i < comp.other; i++) classes.push("other");
+      for (let i = 0; i < comp.opposition; i++) classes.push("opposition");
+    }
+    while (classes.length < total) classes.push("other");
+    classes.length = total;
+
+    const circles = seats.map((s, i) => {
+      const delay = (i * 1.4 / total).toFixed(2);
+      const lit = statuses ? " lit" : "";
+      const style = statuses ? ` style="--d:${delay}s"` : "";
+      return `<circle class="seat ${classes[i]}${lit}" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="4.1"${style}/>`;
+    }).join("");
+
+    const chair = simState.house === "RS" ? t("chair.rs") : t("chair.ls");
+    $("#simChamberSvg").innerHTML = `<svg viewBox="0 0 640 372" role="img" aria-label="${escapeHTML(t("house." + simState.house))}">
+      <ellipse cx="320" cy="330" rx="242" ry="24" fill="rgba(232,182,103,.035)"/>
+      ${circles}
+      <rect class="chamber-desk" x="248" y="340" width="144" height="17" rx="4"/>
+      <text class="chamber-label" x="320" y="352" text-anchor="middle">${escapeHTML(chair)}</text>
+    </svg>`;
+
+    $("#simBadge").textContent = houseInfo(simState.house).badge;
+    $("#simCount").textContent = t("game.seats", { n: total });
+
+    if (statuses) {
+      $("#simTally").innerHTML = `
+        <div class="tally-cell aye"><span>${escapeHTML(t("game.vote.countAyes"))}</span><b data-count="${counts.ayes}">0</b></div>
+        <div class="tally-cell no"><span>${escapeHTML(t("game.vote.countNoes"))}</span><b data-count="${counts.noes}">0</b></div>
+        <div class="tally-cell abstain"><span>${escapeHTML(t("game.vote.countAbstain"))}</span><b data-count="${counts.abstain}">0</b></div>
+        <div class="tally-cell absent"><span>${escapeHTML(t("game.vote.countAbsent"))}</span><b data-count="0">0</b></div>`;
+      $("#simLegend").innerHTML = legendItem("#2fbf71", t("legend.ayes"), counts.ayes)
+        + legendItem("#e2576b", t("legend.noes"), counts.noes)
+        + legendItem("#e0b64e", t("legend.abstain"), counts.abstain)
+        + legendItem("#3a4763", t("legend.absent"), 0);
+      animateSimTally();
+    } else {
+      $("#simTally").innerHTML = "";
+      $("#simLegend").innerHTML = legendItem("#d79a45", t("legend.treasury"), comp.treasury)
+        + legendItem("#4f7fd4", t("legend.opposition"), comp.opposition)
+        + legendItem("#6c7894", t("legend.others"), comp.other);
+    }
+  }
+
+  function renderSimVerdict(comp, motion, counts, info) {
+    const pass = !!info.pass;
+    const name = simMotionName(motion);
+    const alignKey = SIM_ALIGN_LABELS[simState.align] || "sim.align.valueWithMover";
+    const sideName = t("sim.side." + simState.side);
+
+    $("#simVerdict").innerHTML = `<article class="sim-verdict ${pass ? "is-pass" : "is-fail"}">
+      <div class="sv-head">
+        <span class="sv-seal" aria-hidden="true">${pass ? "✓" : "×"}</span>
+        <div>
+          <span class="sv-kicker">${escapeHTML(t("sim.result.kicker"))}</span>
+          <h2>${escapeHTML(t(pass ? "sim.result.carried" : "sim.result.negatived"))}</h2>
+        </div>
+      </div>
+      <div class="sv-counts">
+        <div class="aye"><span>${escapeHTML(t("game.vote.countAyes"))}</span><b>${counts.ayes}</b></div>
+        <div class="no"><span>${escapeHTML(t("game.vote.countNoes"))}</span><b>${counts.noes}</b></div>
+        <div class="abstain"><span>${escapeHTML(t("game.vote.countAbstain"))}</span><b>${counts.abstain}</b></div>
+        <div class="need"><span>${escapeHTML(t("sim.result.need"))}</span><b>${info.need}</b></div>
+      </div>
+      <p class="sv-rule">${t("sim.result.rule", {
+        name: escapeHTML(name),
+        need: info.need,
+        basis: escapeHTML(info.basis),
+        ayes: counts.ayes,
+        noes: counts.noes
+      })}</p>
+      <p class="sv-rule">${escapeHTML(t(pass ? "sim.result.passText" : "sim.result.failText"))}</p>
+      <div class="sv-meta">
+        <span>${escapeHTML(t("sim.result.house"))}: <b>${escapeHTML(houseInfo(simState.house).name)}</b></span>
+        <span>${escapeHTML(t("sim.result.motion"))}: <b>${escapeHTML(name)}</b></span>
+        <span>${escapeHTML(t("sim.result.side"))}: <b>${escapeHTML(sideName)}</b></span>
+        <span>${escapeHTML(t("sim.result.align"))}: <b>${escapeHTML(t(alignKey))}</b></span>
+        <span>${escapeHTML(motion.article)}</span>
+      </div>
+      <div class="sv-actions">
+        <button type="button" class="btn btn-gold btn-sm" data-sim-again>${escapeHTML(t("sim.result.again"))}</button>
+        <button type="button" class="btn btn-ghost btn-sm" data-nav="learn">${escapeHTML(t("sim.result.learn"))}</button>
+      </div>
+    </article>`;
+  }
+
+  function renderSimSources() {
+    const el = $("#simSources");
+    if (!el || typeof PARLIAMENT_SOURCES === "undefined") return;
+    el.innerHTML = escapeHTML(t("sim.sources")) + " " + PARLIAMENT_SOURCES.map((s) =>
+      `<a href="${s.url}" target="_blank" rel="noopener">${escapeHTML(s.title)}</a>`
+    ).join(" · ");
+  }
+
+  function renderSimulator() {
+    if (typeof PARLIAMENT_TERMS === "undefined" || !PARLIAMENT_TERMS.length) return;
+    const term = simTerm();
+    if (!term) return;
+    const comp = simComposition();
+    const applicable = simApplicableMotions();
+    if (!applicable.some((m) => m.id === simState.motion)) {
+      simState.motion = applicable[0] ? applicable[0].id : null;
+    }
+    const motion = simSelectedMotion();
+    if (!motion) return;
+
+    const yearInput = $("#simYear");
+    if (yearInput) {
+      yearInput.max = String(PARLIAMENT_TERMS.length - 1);
+      yearInput.value = String(simState.yearIndex);
+      yearInput.setAttribute("aria-valuetext", String(term.year));
+    }
+    $("#simYearValue").textContent = term.year;
+    $("#simTermChip").textContent = t("sim.termChip", { n: term.lsNo, year: term.year });
+    $("#simPM").textContent = term.pm;
+    $("#simHouseNote").textContent = t("sim.houseNote", { n: comp.total });
+    $("#simLsCount").textContent = term.ls.total;
+    $("#simRsCount").textContent = term.rs.total;
+
+    $$("#simHouseTabs [data-sim-house]").forEach((b) => {
+      const on = b.dataset.simHouse === simState.house;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
+    });
+
+    $("#simTreasuryParty").textContent = term.government;
+    $("#simOppositionParty").textContent = term.oppositionParty;
+    $("#simTreasurySeats").textContent = comp.treasury;
+    $("#simOppositionSeats").textContent = comp.opposition;
+    $("#simOtherSeats").textContent = comp.other;
+
+    $$("#simSides [data-sim-side]").forEach((b) => {
+      b.classList.toggle("is-active", b.dataset.simSide === simState.side);
+    });
+
+    const sideHintKey = simState.side === "treasury"
+      ? "sim.side.hintTreasury"
+      : simState.side === "opposition"
+        ? "sim.side.hintOpposition"
+        : "sim.side.hintOther";
+    $("#simSideHint").textContent = t(sideHintKey);
+
+    const sel = $("#simMotion");
+    const options = applicable.map((m) =>
+      `<option value="${m.id}">${escapeHTML(simMotionName(m))}</option>`
+    ).join("");
+    if (sel) {
+      if (sel.innerHTML !== options) sel.innerHTML = options;
+      sel.value = simState.motion;
+    }
+    $("#simMotionArticle").textContent = motion.article;
+    $("#simMotionDesc").textContent = simMotionDesc(motion);
+
+    const isOther = simState.side === "other";
+    $("#simAligns").hidden = isOther;
+    $("#simAlignsOther").hidden = !isOther;
+    $("#simAlignLabel").textContent = t(isOther ? "sim.align.otherLabel" : "sim.align.label");
+    $("#simAlignHint").textContent = t(isOther ? "sim.align.hintOther" : "sim.align.hint");
+    $$("#simAligns [data-sim-align], #simAlignsOther [data-sim-align]").forEach((b) => {
+      b.classList.toggle("is-active", b.dataset.simAlign === simState.align);
+    });
+
+    const allowed = simMoverAllowed(motion);
+    const note = $("#simMoverNote");
+    const testBtn = $("#simTest");
+    if (allowed) {
+      note.hidden = true;
+      note.innerHTML = "";
+      if (testBtn) testBtn.disabled = false;
+    } else {
+      note.hidden = false;
+      note.innerHTML = t("sim.moverBlocked", {
+        motion: escapeHTML(simMotionName(motion)),
+        mover: escapeHTML(t("sim.side." + motion.mover))
+      });
+      if (testBtn) testBtn.disabled = true;
+    }
+
+    const counts = simCounts();
+    const needInfo = majorityNeed(motion.majority, {
+      total: comp.total,
+      vacancies: 0,
+      ayes: counts.ayes,
+      noes: counts.noes
+    });
+    $("#simThreshold").textContent = t("sim.thresholdValue", { n: needInfo.need });
+    $("#simThreshold").title = needInfo.basis;
+
+    renderSimChamber(comp, simState.tested && simState.lastVote ? simState.lastVote.statuses : null, counts);
+    if (simState.tested && simState.lastVote) renderSimVerdict(comp, motion, counts, needInfo);
+    else $("#simVerdict").innerHTML = "";
+
+    renderSimSources();
+  }
+
+  function setSimYear(index, withSound) {
+    if (typeof PARLIAMENT_TERMS === "undefined" || !PARLIAMENT_TERMS.length) return;
+    simState.yearIndex = Math.max(0, Math.min(PARLIAMENT_TERMS.length - 1, index));
+    simReset();
+    renderSimulator();
+    if (withSound) sound("click");
+  }
+
+  function setSimHouse(house) {
+    if (house !== "LS" && house !== "RS") return;
+    if (house === simState.house) return;
+    simState.house = house;
+    simReset();
+    renderSimulator();
+    sound("click");
+  }
+
+  function setSimSide(side) {
+    if (["treasury", "opposition", "other"].indexOf(side) === -1) return;
+    if (side === simState.side) return;
+    simState.side = side;
+    if (side === "other") {
+      if (["treasury", "opposition", "neither"].indexOf(simState.align) === -1) simState.align = "treasury";
+    } else if (["withMover", "againstMover", "abstain"].indexOf(simState.align) === -1) {
+      simState.align = "withMover";
+    }
+    simReset();
+    renderSimulator();
+    sound("click");
+  }
+
+  function setSimAlign(align) {
+    simState.align = align;
+    simReset();
+    renderSimulator();
+    sound("click");
+  }
+
+  function setSimMotion(id) {
+    if (!id) return;
+    simState.motion = id;
+    simReset();
+    renderSimulator();
+    sound("click");
+  }
+
+  function runSimDivision() {
+    const motion = simSelectedMotion();
+    if (!motion || !simMoverAllowed(motion)) return;
+    const comp = simComposition();
+    const counts = simCounts();
+    const info = majorityNeed(motion.majority, {
+      total: comp.total,
+      vacancies: 0,
+      ayes: counts.ayes,
+      noes: counts.noes
+    });
+
+    simState.tested = true;
+    simState.lastVote = { statuses: buildSimStatuses(counts) };
+    renderSimulator();
+
+    sound("conch");
+    setTimeout(soundBell, 220);
+    document.body.classList.add("is-dividing");
+    setTimeout(() => document.body.classList.remove("is-dividing"), 1400);
+    [1, 2, 3, 4, 5, 6].forEach((n) => setTimeout(() => sound("vote"), 400 + n * 300));
+    setTimeout(() => sound(info.pass ? "dhol" : "defeat"), 1000);
+    if (info.pass) setTimeout(() => sound("applause"), 1650);
+  }
+
+  function initSimulator() {
+    if (typeof PARLIAMENT_TERMS === "undefined" || !PARLIAMENT_TERMS.length) return;
+    const screen = $("#screen-simulator");
+    if (!screen) return;
+
+    simState.yearIndex = PARLIAMENT_TERMS.length - 1;
+    const yearInput = $("#simYear");
+    let yearFrame = 0;
+    if (yearInput) {
+      yearInput.max = String(PARLIAMENT_TERMS.length - 1);
+      yearInput.value = String(simState.yearIndex);
+      yearInput.addEventListener("input", () => {
+        if (yearFrame) cancelAnimationFrame(yearFrame);
+        yearFrame = requestAnimationFrame(() => {
+          yearFrame = 0;
+          setSimYear(Number(yearInput.value));
+        });
+      });
+    }
+
+    screen.addEventListener("click", (e) => {
+      const house = e.target.closest("[data-sim-house]");
+      if (house) { setSimHouse(house.dataset.simHouse); return; }
+      const side = e.target.closest("[data-sim-side]");
+      if (side) { setSimSide(side.dataset.simSide); return; }
+      const align = e.target.closest("[data-sim-align]");
+      if (align) { setSimAlign(align.dataset.simAlign); return; }
+      if (e.target.closest("#simPrevYear")) { setSimYear(simState.yearIndex - 1, true); return; }
+      if (e.target.closest("#simNextYear")) { setSimYear(simState.yearIndex + 1, true); return; }
+      if (e.target.closest("#simTest")) { runSimDivision(); return; }
+      if (e.target.closest("[data-sim-again]")) {
+        simReset();
+        renderSimulator();
+        sound("click");
+      }
+    });
+
+    const motionSelect = $("#simMotion");
+    if (motionSelect) {
+      motionSelect.addEventListener("change", () => setSimMotion(motionSelect.value));
+    }
+
+    renderSimulator();
+  }
+
   function setLanguage(next) {
     if (!I18N[next] || next === lang) return;
     lang = next;
@@ -1203,6 +1664,7 @@
     renderScenarioGrid();
     renderMajorityStrip();
     renderLearn(currentTab);
+    renderSimulator();
     updateStats();
 
     if (Roaches) {
@@ -1217,6 +1679,8 @@
       rerenderGamePhase();
     } else if (currentScreen === "roaches") {
       document.title = t("roach.meta.title");
+    } else if (currentScreen === "simulator") {
+      document.title = t("sim.meta.title");
     } else {
       document.title = t("meta.title");
     }
@@ -1245,6 +1709,7 @@
     renderScenarioGrid();
     renderMajorityStrip();
     renderLearn("majorities");
+    initSimulator();
     updateStats();
 
     if (Roaches) {

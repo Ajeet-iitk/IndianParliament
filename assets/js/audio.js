@@ -321,6 +321,20 @@ const SansadAudio = (function () {
         });
         break;
 
+      case "conch":
+        tone({ freq: 196, glide: 294, dur: 1.15, type: "sawtooth", gain: 0.045, filter: "lowpass", filterFreq: 900, q: 1.4, attack: 0.09 });
+        tone({ freq: 392, glide: 587, dur: 0.95, type: "sine", gain: 0.028, delay: 0.08, attack: 0.08 });
+        noise({ dur: 1.05, gain: 0.018, filter: "bandpass", freq: 700, freqEnd: 1500, q: 1.1, attack: 0.12 });
+        break;
+
+      case "dhol":
+        [0, 0.15, 0.3, 0.45, 0.62].forEach((delay, i) => {
+          tone({ freq: i % 2 ? 118 : 82, glide: 46, dur: 0.17, type: "sine", gain: 0.13, delay, attack: 0.004 });
+          noise({ dur: 0.06, gain: 0.055, filter: "lowpass", freq: 900, q: 0.6, delay });
+        });
+        tone({ freq: 196, glide: 98, dur: 0.22, type: "triangle", gain: 0.03, delay: 0.62 });
+        break;
+
       default:
         tone({ freq: 600, dur: 0.08, type: "sine", gain: 0.03 });
     }
@@ -355,6 +369,40 @@ const SansadAudio = (function () {
       drone: [note(38), note(45), note(50)],
       padType: "sine",
       cutoff: 640
+    },
+    desh: {
+      pluckEvery: 0.62,
+      // Original march motif in D major pentatonic — a processional, not a quotation.
+      pattern: [
+        note(50), note(57), note(62), note(57), note(59), note(62), note(64), note(62),
+        note(57), note(64), note(69), note(64), note(62), note(59), note(57), note(50)
+      ],
+      chords: [
+        [note(50), note(54), note(57)],
+        [note(55), note(59), note(62)],
+        [note(57), note(61), note(64)],
+        [note(50), note(54), note(57)]
+      ],
+      drone: [note(38), note(45), note(50)],
+      padType: "triangle",
+      cutoff: 1150
+    },
+    vande: {
+      pluckEvery: 1.35,
+      // A slow devotional pentatonic in D — an instrumental homage to the song.
+      pattern: [
+        note(50), note(53), note(57), note(55), note(53), note(50), note(48), note(50),
+        note(53), note(57), note(60), note(57), note(55), note(53), note(50), note(48)
+      ],
+      chords: [
+        [note(50), note(53), note(57)],
+        [note(45), note(50), note(53)],
+        [note(48), note(52), note(55)],
+        [note(43), note(50), note(55)]
+      ],
+      drone: [note(38), note(45), note(50)],
+      padType: "sine",
+      cutoff: 780
     },
     silent: null
   };

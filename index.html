@@ -38,9 +38,10 @@
   </a>
 
   <nav class="nav-links" aria-label="Primary">
-    <button class="nav-link is-active" data-nav="home">Home</button>
-    <button class="nav-link" data-nav="select">Order Paper</button>
-    <button class="nav-link" data-nav="learn">Polity Lab</button>
+    <button class="nav-link is-active" data-nav="home" data-i18n="nav.home">Home</button>
+    <button class="nav-link" data-nav="select" data-i18n="nav.order">Order Paper</button>
+    <button class="nav-link" data-nav="simulator" data-i18n="nav.history">History</button>
+    <button class="nav-link" data-nav="learn" data-i18n="nav.lab">Polity Lab</button>
   </nav>
 
   <div class="nav-actions">
@@ -88,6 +89,8 @@
             <select id="musicStyle" class="mini-select">
               <option value="tanpura" data-i18n="style.tanpura">Tanpura drone</option>
               <option value="cinematic" data-i18n="style.cinematic">Cinematic pad</option>
+              <option value="desh" data-i18n="style.desh">Desh march</option>
+              <option value="vande" data-i18n="style.vande">Vande Mataram (instrumental)</option>
               <option value="silent" data-i18n="style.silent">Silent</option>
             </select>
           </label>
@@ -112,6 +115,7 @@
 <nav class="mobile-dock" aria-label="Mobile navigation">
   <button class="dock-link is-active" data-nav="home" data-i18n="nav.home">Home</button>
   <button class="dock-link" data-nav="select" data-i18n="nav.order">Order Paper</button>
+  <button class="dock-link" data-nav="simulator" data-i18n="nav.history">History</button>
   <button class="dock-link" data-nav="learn" data-i18n="nav.lab">Polity Lab</button>
 </nav>
 
@@ -351,6 +355,33 @@
     </div>
   </section>
 
+  <section class="section history-teaser">
+    <div class="history-band">
+      <div class="history-band-copy">
+        <span class="kicker" data-i18n="home.history.kicker">A living archive</span>
+        <h2 data-i18n-html="home.history.title">The House has <em>changed.</em></h2>
+        <p data-i18n="home.history.text">Travel from the first Lok Sabha to the eighteenth. Watch the seat totals move, take a side, and find out whether your motion would have carried that year.</p>
+        <button class="btn btn-gold" data-nav="simulator">
+          <span data-i18n="home.history.cta">Open the history simulator</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="history-rail" aria-hidden="true">
+        <div class="history-track">
+          <span>1952</span><span>1977</span><span>1991</span><span>2024</span>
+        </div>
+        <div class="history-bars">
+          <i style="--h:74%"></i><i style="--h:75%"></i><i style="--h:73%"></i><i style="--h:54%"></i>
+          <i style="--h:68%"></i><i style="--h:64%"></i><i style="--h:65%"></i><i style="--h:76%"></i>
+          <i style="--h:26%"></i><i style="--h:45%"></i><i style="--h:35%"></i><i style="--h:46%"></i>
+          <i style="--h:56%"></i><i style="--h:40%"></i><i style="--h:48%"></i><i style="--h:62%"></i>
+          <i style="--h:65%"></i><i style="--h:54%"></i>
+        </div>
+        <p data-i18n="home.history.caption">18 Lok Sabhas · one Constitution</p>
+      </div>
+    </div>
+  </section>
+
   <section class="section">
     <div class="section-head">
       <div>
@@ -453,6 +484,137 @@
       <h3 data-i18n="select.scoring.title">How scoring works</h3>
       <p data-i18n-html="select.scoring.text">Every correct procedural call is worth <b>100 XP</b>. Calling the right majority before a division is worth <b>150 XP</b>, and finishing a session adds a <b>50 XP</b> completion bonus. Three stars need at least 90% accuracy.</p>
     </div>
+  </div>
+</section>
+
+<!-- ============================= SIMULATOR ============================= -->
+<section class="screen" id="screen-simulator" data-screen="simulator">
+  <div class="page-head sim-head">
+    <button class="back-link" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      <span data-i18n="sim.back">Home</span>
+    </button>
+    <span class="kicker" data-i18n="sim.kicker">The historical House</span>
+    <h1 data-i18n-html="sim.title">Pick a <em>year.</em> Test the <em>House.</em></h1>
+    <p class="page-lede" data-i18n="sim.lede">Eighteen general elections, one Constitution. Choose a year, watch the benches change, pick the side you represent, and put a motion to the floor.</p>
+  </div>
+
+  <div class="sim-grid">
+    <aside class="chamber-panel">
+      <div class="chamber-head">
+        <span class="chamber-badge" id="simBadge">LOK SABHA</span>
+        <span class="chamber-count" id="simCount">543 seats</span>
+      </div>
+      <div class="chamber-svg" id="simChamberSvg" aria-label="Seating plan of the historical House"></div>
+      <div class="chamber-legend" id="simLegend"></div>
+      <div class="chamber-tally" id="simTally"></div>
+      <div class="chamber-foot">
+        <div><span data-i18n="sim.foot.pm">Prime Minister</span><b id="simPM">—</b></div>
+        <div><span data-i18n="sim.foot.threshold">Majority mark</span><b id="simThreshold">—</b></div>
+      </div>
+    </aside>
+
+    <div class="sim-panel">
+      <div class="panel-card sim-controls">
+        <span class="stage-chip" id="simTermChip">Lok Sabha 18 · 2024</span>
+
+        <div class="sim-block sim-year-block">
+          <div class="sim-year-head">
+            <div>
+              <span class="sim-label" data-i18n="sim.year.label">Election year</span>
+              <div class="sim-year-value" id="simYearValue">2024</div>
+            </div>
+            <div class="sim-year-nav">
+              <button type="button" id="simPrevYear" aria-label="Previous election" data-i18n-aria="sim.year.prev">←</button>
+              <button type="button" id="simNextYear" aria-label="Next election" data-i18n-aria="sim.year.next">→</button>
+            </div>
+          </div>
+          <input type="range" id="simYear" min="0" max="17" step="1" value="17" aria-label="Election year" data-i18n-aria="sim.year.label">
+          <div class="sim-year-scale"><span>1952</span><span>2024</span></div>
+          <p class="sim-hint" data-i18n="sim.year.hint">Slide through 18 general elections. The House resizes itself.</p>
+        </div>
+
+        <div class="sim-block">
+          <div class="sim-block-head">
+            <span class="sim-label" data-i18n="sim.house.label">House</span>
+            <span class="sim-mini" id="simHouseNote">543 members</span>
+          </div>
+          <div class="sim-seg" id="simHouseTabs" role="tablist">
+            <button type="button" class="is-active" data-sim-house="LS" role="tab" aria-selected="true">
+              <span data-i18n="sim.house.ls">Lok Sabha</span><i id="simLsCount">543</i>
+            </button>
+            <button type="button" data-sim-house="RS" role="tab" aria-selected="false">
+              <span data-i18n="sim.house.rs">Rajya Sabha</span><i id="simRsCount">245</i>
+            </button>
+          </div>
+        </div>
+
+        <div class="sim-block">
+          <div class="sim-block-head">
+            <span class="sim-label" data-i18n="sim.side.label">Which side do you represent?</span>
+          </div>
+          <div class="sim-sides" id="simSides">
+            <button type="button" class="is-active" data-sim-side="treasury">
+              <span class="sim-dot treasury"></span>
+              <span class="sim-side-copy"><b data-i18n="sim.side.treasury">Treasury</b><em id="simTreasuryParty">NDA</em></span>
+              <i id="simTreasurySeats">293</i>
+            </button>
+            <button type="button" data-sim-side="opposition">
+              <span class="sim-dot opposition"></span>
+              <span class="sim-side-copy"><b data-i18n="sim.side.opposition">Opposition</b><em id="simOppositionParty">INDIA</em></span>
+              <i id="simOppositionSeats">234</i>
+            </button>
+            <button type="button" data-sim-side="other">
+              <span class="sim-dot other"></span>
+              <span class="sim-side-copy"><b data-i18n="sim.side.other">Other benches</b><em data-i18n="sim.side.otherParty">Crossbench</em></span>
+              <i id="simOtherSeats">16</i>
+            </button>
+          </div>
+          <p class="sim-hint" id="simSideHint" data-i18n="sim.side.hint">You move the motion from these benches.</p>
+        </div>
+
+        <div class="sim-block">
+          <div class="sim-block-head">
+            <span class="sim-label" data-i18n="sim.motion.label">Motion</span>
+            <span class="sim-mini" id="simMotionArticle">Art. 107</span>
+          </div>
+          <select id="simMotion" class="mini-select sim-select" aria-label="Motion"></select>
+          <p class="sim-hint" id="simMotionDesc"></p>
+        </div>
+
+        <div class="sim-block">
+          <div class="sim-block-head">
+            <span class="sim-label" id="simAlignLabel" data-i18n="sim.align.label">How do the other benches vote?</span>
+          </div>
+          <div class="sim-aligns" id="simAligns">
+            <button type="button" class="is-active" data-sim-align="withMover" data-i18n="sim.align.withMover">Back the motion</button>
+            <button type="button" data-sim-align="againstMover" data-i18n="sim.align.againstMover">Oppose the motion</button>
+            <button type="button" data-sim-align="abstain" data-i18n="sim.align.abstain">Abstain</button>
+          </div>
+          <div class="sim-aligns" id="simAlignsOther" hidden>
+            <button type="button" data-sim-align="treasury" data-i18n="sim.align.backTreasury">Treasury backs me</button>
+            <button type="button" data-sim-align="opposition" data-i18n="sim.align.backOpposition">Opposition backs me</button>
+            <button type="button" data-sim-align="neither" data-i18n="sim.align.neither">Neither backs me</button>
+          </div>
+          <p class="sim-hint" id="simAlignHint" data-i18n="sim.align.hint">Crossbench members decide the floor. Change sides and the arithmetic changes.</p>
+        </div>
+
+        <div class="sim-actions">
+          <p class="sim-hint sim-warning" id="simMoverNote" hidden></p>
+          <button type="button" class="btn btn-gold" id="simTest">
+            <span data-i18n="sim.test">Ring the Division Bell</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="simVerdict"></div>
+    </div>
+  </div>
+
+  <div class="sim-footnotes">
+    <p data-i18n="sim.note">Seat totals are historical. Bloc strengths, especially in the Rajya Sabha, are rounded and illustrative — the point is the arithmetic of the Constitution, not an exact party tally.</p>
+    <p id="simSources"></p>
   </div>
 </section>
 
@@ -628,6 +790,7 @@
     <div class="footer-links">
       <button data-nav="home" data-i18n="footer.links.home">Home</button>
       <button data-nav="select" data-i18n="footer.links.order">Order Paper</button>
+      <button data-nav="simulator" data-i18n="footer.links.history">History</button>
       <button data-nav="learn" data-i18n="footer.links.lab">Polity Lab</button>
       <button class="footer-roach" data-nav="roaches" data-i18n-title="roach.trigger"><span aria-hidden="true">🪳</span> <span data-i18n="roach.nav">Cockroaches</span></button>
     </div>
@@ -647,6 +810,7 @@
 <noscript><div class="noscript">This simulator needs JavaScript enabled to run the Parliament.</div></noscript>
 
 <script src="assets/js/data.js"></script>
+<script src="assets/js/history.js"></script>
 <script src="assets/js/i18n.js"></script>
 <script src="assets/js/i18n-hi.js"></script>
 <script src="assets/js/i18n-hinglish.js"></script>
