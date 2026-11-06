@@ -15,8 +15,9 @@ const I18N = {
   en: {
     ui: {
       "nav.history": "History",
+      "style.vandemataram": "Vande Mataram (original)",
       "style.desh": "Desh march",
-      "style.vande": "Vande Mataram (instrumental)",
+      "style.vande": "Vande Mataram (synth homage)",
       "home.history.kicker": "A living archive",
       "home.history.title": "The House has <em>changed.</em>",
       "home.history.text": "Travel from the first Lok Sabha to the eighteenth. Watch the seat totals move, take a side, and find out whether your motion would have carried that year.",
@@ -476,8 +477,9 @@ const I18N = {
   hi: {
     ui: {
       "nav.history": "इतिहास",
+      "style.vandemataram": "वंदे मातरम् (मूल रिकॉर्डिंग)",
       "style.desh": "देश मार्च",
-      "style.vande": "वंदे मातरम् (वाद्य)",
+      "style.vande": "वंदे मातरम् (सिंथ धुन)",
       "home.history.kicker": "जीवंत अभिलेख",
       "home.history.title": "सदन <em>बदलता रहा है।</em>",
       "home.history.text": "पहली लोकसभा से अठारहवीं तक की यात्रा करें। सीटों की संख्या बदलती देखें, कोई पक्ष चुनें और जानें कि उस वर्ष आपका प्रस्ताव पार होता या नहीं।",
@@ -937,8 +939,9 @@ const I18N = {
   hinglish: {
     ui: {
       "nav.history": "History",
+      "style.vandemataram": "Vande Mataram (original)",
       "style.desh": "Desh march",
-      "style.vande": "Vande Mataram (instrumental)",
+      "style.vande": "Vande Mataram (synth homage)",
       "home.history.kicker": "Ek jeevant archive",
       "home.history.title": "House <em>badalta raha hai.</em>",
       "home.history.text": "Pehli Lok Sabha se aatharhvi tak ka safar. Seats badalti dekhein, side chunein, aur jaanein ki us saal aapka motion pass hota ya nahi.",

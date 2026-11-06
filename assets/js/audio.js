@@ -1,8 +1,10 @@
 /* ============================================================
    SANSAD — Audio engine
-   Every sound and the ambient score are synthesised live with
-   the Web Audio API. No third-party samples, no licences,
-   no network requests. Open source by construction.
+   Sound effects and the optional scores are synthesised live
+   with the Web Audio API. The default score is the bundled
+   instrumental Vande Mataram recording, played through an
+   HTML audio element so it can loop and honour the same
+   music, volume, visibility and reduced-motion preferences.
    ============================================================ */
 
 const SansadAudio = (function () {
@@ -13,7 +15,7 @@ const SansadAudio = (function () {
     sfx: true,
     musicVol: 0.42,
     sfxVol: 0.7,
-    style: "tanpura"
+    style: "vandemataram"
   };
 
   let settings = Object.assign({}, DEFAULTS);
@@ -28,6 +30,10 @@ const SansadAudio = (function () {
   let beat = 0;
   let chordIndex = 0;
   let hiddenStop = false;
+  let fileAudio = null;
+  let filePlaying = false;
+  let fileBlocked = false;
+  let fileFadeTimer = null;
 
   const A4 = 440;
   const note = (n) => A4 * Math.pow(2, (n - 69) / 12);
@@ -108,6 +114,9 @@ const SansadAudio = (function () {
   }
 
   function applyVolumes(immediate) {
+    if (fileAudio && filePlaying) {
+      fadeFileTo(targetFileVolume(), immediate ? 0 : 180);
+    }
     if (!ctx) return;
     const t = ctx.currentTime;
     const s = settings.sfx ? curve(settings.sfxVol) : 0;
@@ -413,6 +422,87 @@ const SansadAudio = (function () {
     silent: null
   };
 
+  /* ----------------------------------------------------------
+     Recorded score
+     ---------------------------------------------------------- */
+  const FILE_STYLES = {
+    vandemataram: {
+      src: "assets/audio/vande-mataram-instrumental.mp3",
+      trim: 1.35
+    }
+  };
+
+  function isFileStyle(style) {
+    return !!FILE_STYLES[style];
+  }
+
+  function targetFileVolume() {
+    if (!settings.music) return 0;
+    const meta = FILE_STYLES[settings.style];
+    const trim = meta ? meta.trim : 1;
+    return Math.min(1, curve(settings.musicVol) * trim);
+  }
+
+  function clearFileFade() {
+    if (fileFadeTimer) {
+      clearInterval(fileFadeTimer);
+      fileFadeTimer = null;
+    }
+  }
+
+  function fadeFileTo(target, ms, done) {
+    if (!fileAudio) {
+      if (done) done();
+      return;
+    }
+    clearFileFade();
+    const to = Math.max(0, Math.min(1, target));
+    if (!ms) {
+      fileAudio.volume = to;
+      if (done) done();
+      return;
+    }
+    const from = fileAudio.volume;
+    const started = Date.now();
+    fileFadeTimer = setInterval(() => {
+      const p = Math.min(1, (Date.now() - started) / ms);
+      fileAudio.volume = Math.max(0, Math.min(1, from + (to - from) * p));
+      if (p >= 1) {
+        clearFileFade();
+        if (done) done();
+      }
+    }, 40);
+  }
+
+  function ensureFileAudio() {
+    if (fileAudio) return fileAudio;
+    fileAudio = new window.Audio();
+    fileAudio.loop = true;
+    fileAudio.preload = "auto";
+    fileAudio.volume = 0;
+    return fileAudio;
+  }
+
+  function startFile() {
+    const meta = FILE_STYLES[settings.style];
+    if (!meta) return;
+    const el = ensureFileAudio();
+    const src = new URL(meta.src, document.baseURI).href;
+    if (el.src !== src) el.src = src;
+    el.loop = true;
+    el.volume = 0;
+    filePlaying = true;
+    const play = el.play();
+    if (play && typeof play.catch === "function") {
+      play.catch(() => {
+        // Autoplay was refused; retry on the next gesture.
+        filePlaying = false;
+        fileBlocked = true;
+      });
+    }
+    fadeFileTo(targetFileVolume(), 1600);
+  }
+
   function track(voice) {
     musicVoices.push(voice);
     if (musicVoices.length > 60) musicVoices = musicVoices.slice(-40);
@@ -506,6 +596,12 @@ const SansadAudio = (function () {
 
   function start() {
     if (!settings.music || settings.style === "silent") return;
+    if (isFileStyle(settings.style)) {
+      if (filePlaying) return;
+      musicPlaying = true;
+      startFile();
+      return;
+    }
     if (!init()) return;
     if (ctx.state === "suspended") ctx.resume();
     if (musicPlaying) return;
@@ -524,8 +620,17 @@ const SansadAudio = (function () {
   }
 
   function stop() {
-    if (!ctx) return;
+    const hadFile = filePlaying;
+    filePlaying = false;
     musicPlaying = false;
+    if (hadFile && fileAudio) {
+      fadeFileTo(0, 500, () => {
+        if (!filePlaying && fileAudio) {
+          try { fileAudio.pause(); } catch (_) {}
+        }
+      });
+    }
+    if (!ctx) return;
     clearInterval(musicTimer);
     musicTimer = null;
     const t = ctx.currentTime;
@@ -554,7 +659,7 @@ const SansadAudio = (function () {
     const wasMusic = settings.music;
     const wasStyle = settings.style;
     settings = Object.assign({}, settings, next || {});
-    if (ctx) applyVolumes();
+    applyVolumes();
     if (!unlocked) return; // remember preferences until the first gesture
     if (settings.music && (!wasMusic || settings.style !== wasStyle)) {
       if (!wasMusic) start();
@@ -567,8 +672,8 @@ const SansadAudio = (function () {
   function unlock() {
     if (unlocked) return;
     unlocked = true;
-    if (!init()) return;
-    if (ctx.state === "suspended") ctx.resume();
+    init();
+    if (ctx && ctx.state === "suspended") ctx.resume();
     if (settings.music) start();
   }
 
@@ -580,9 +685,34 @@ const SansadAudio = (function () {
     return unlocked;
   }
 
+  function status() {
+    return {
+      style: settings.style,
+      music: settings.music,
+      unlocked: unlocked,
+      musicPlaying: musicPlaying,
+      filePlaying: filePlaying,
+      fileBlocked: fileBlocked,
+      fileSrc: fileAudio ? fileAudio.src : null,
+      fileVolume: fileAudio ? fileAudio.volume : null,
+      filePaused: fileAudio ? fileAudio.paused : null,
+      fileReadyState: fileAudio ? fileAudio.readyState : null,
+      fileDuration: fileAudio ? fileAudio.duration : null,
+      ctx: ctx ? ctx.state : null
+    };
+  }
+
   function boot() {
     ["pointerdown", "keydown", "touchstart"].forEach((evt) => {
       document.addEventListener(evt, unlock, { once: true, passive: true });
+    });
+    ["pointerdown", "keydown", "touchstart"].forEach((evt) => {
+      document.addEventListener(evt, () => {
+        if (fileBlocked && settings.music) {
+          fileBlocked = false;
+          start();
+        }
+      }, { passive: true });
     });
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
@@ -605,8 +735,9 @@ const SansadAudio = (function () {
     getSettings,
     unlock,
     isUnlocked,
+    status,
     startMusic: start,
     stopMusic: stop,
-    supports: !!(window.AudioContext || window.webkitAudioContext)
+    supports: !!(window.AudioContext || window.webkitAudioContext) || typeof window.Audio !== "undefined"
   };
 })();

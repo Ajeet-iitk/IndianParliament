@@ -30,7 +30,7 @@ An interactive UPSC Polity simulator where you take the Chair and run the Indian
 - **Day and night themes** — a warm sandstone daylight palette and the original dark navy chamber, with the choice remembered on your next visit.
 - **Living motion** — the hero tricolour ripples through an SVG displacement filter, a public-gallery band sways with citizens, hand-held flags and walking figures, and silhouettes pace inside the chamber.
 - **Secret Cockroaches game** — type `roach` anywhere, tap the little scuttling bug, or use the footer link. Survive a sixty-second Gen Z infestation by crushing roaches, spraying them back, and passing reforms to clear the floor. Scores and best runs are stored separately from scenario XP.
-- **Sound, music and motion** — four original Web Audio scores (tanpura drone, cinematic pad, a Desh march and an instrumental Vande Mataram), gavel, division bell, vote ticks, chimes and applause, plus whoosh, spray, squish, skitter, breach, buzz, combo, reform, conch, dhol, alarm, victory and defeat effects. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
+- **Sound, music and motion** — the bundled instrumental *Vande Mataram* recording plays as the default background score, with four original Web Audio scores (tanpura drone, cinematic pad, a Desh march and a synth Vande Mataram homage) selectable in its place. Gavel, division bell, vote ticks, chimes and applause, plus whoosh, spray, squish, skitter, breach, buzz, combo, reform, conch, dhol, alarm, victory and defeat effects. Music, effects, volume and reduced motion are all configurable, and reduced motion is also honoured from the operating system.
 - **Responsive and cinematic** — custom SVG Parliament artwork, serif display type, ambient dust, card entrances, vote-count animations and confetti, with a mobile bottom dock.
 
 ## Controls
@@ -74,6 +74,8 @@ To publish your own copy:
 IndianParliament/
 ├── index.html                  # Page shell, screens, hero SVG, controls, mobile dock
 ├── assets/
+│   ├── audio/
+│   │   └── vande-mataram-instrumental.mp3   # Default background score
 │   ├── css/style.css           # Themes, layout, animations, Emergency red mode, responsive rules
 │   ├── img/preview.jpg         # README preview
 │   └── js/
@@ -121,7 +123,7 @@ This is an educational simulation, not an official source. For the authoritative
 
 ## Credits
 
-All artwork is hand-built SVG and CSS. Music and sound effects are synthesised at runtime with the Web Audio API — no third-party samples, no external audio requests, and no licensing dependencies.
+All artwork is hand-built SVG and CSS. The default background score is the bundled *Vande Mataram* instrumental MP3 that ships with the project; every other score and all sound effects are synthesised at runtime with the Web Audio API, with no external audio requests.
 
 ## License
 

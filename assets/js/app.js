@@ -29,7 +29,7 @@
     if (saved === "day" || saved === "night") theme = saved;
   } catch (_) { /* ignore */ }
 
-  let audioPrefs = { music: true, sfx: true, musicVol: 0.42, sfxVol: 0.7, style: "tanpura" };
+  let audioPrefs = { music: true, sfx: true, musicVol: 0.42, sfxVol: 0.7, style: "vandemataram" };
   try {
     const saved = localStorage.getItem(AUDIO_KEY);
     if (saved) audioPrefs = Object.assign(audioPrefs, JSON.parse(saved));
@@ -1159,7 +1159,7 @@
     if (sfx) sfx.checked = !!audioPrefs.sfx;
     if (musicVol) musicVol.value = Math.round((audioPrefs.musicVol ?? 0.42) * 100);
     if (sfxVol) sfxVol.value = Math.round((audioPrefs.sfxVol ?? 0.7) * 100);
-    if (style) style.value = audioPrefs.style || "tanpura";
+    if (style) style.value = audioPrefs.style || "vandemataram";
     if (motion) motion.checked = reduceMotion;
     const btn = $("#soundBtn");
     if (btn) btn.classList.toggle("is-muted", !audioPrefs.music && !audioPrefs.sfx);

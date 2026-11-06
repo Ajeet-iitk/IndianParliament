@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
-<title>Sansad — The Mock Parliament | UPSC Polity Simulator</title>
+<title>Sansad â€” The Mock Parliament | UPSC Polity Simulator</title>
 <meta name="description" content="An interactive mock Parliament for UPSC aspirants. Pass ordinary, money and finance bills, amend the Constitution, and move impeachments while mastering every majority the Constitution demands.">
 <meta name="theme-color" content="#070b17" id="themeColor">
-<meta property="og:title" content="Sansad — The Mock Parliament">
+<meta property="og:title" content="Sansad â€” The Mock Parliament">
 <meta property="og:description" content="Enter the House. Decide the Nation. A cinematic mock Parliament simulator for UPSC Polity.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='29' fill='%23070b17' stroke='%23e8b667' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23e8b667' stroke-width='2'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%23e8b667'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20261106b">
+<link rel="stylesheet" href="assets/css/style.css?v=20261106c">
 </head>
 <body>
 
@@ -57,7 +57,7 @@
         </button>
         <div class="popover lang-menu" id="langMenu" role="menu" aria-label="Language">
           <button class="lang-option" data-lang="en" role="menuitem"><span>English</span><i>EN</i></button>
-          <button class="lang-option" data-lang="hi" role="menuitem"><span>हिन्दी</span><i>हिं</i></button>
+          <button class="lang-option" data-lang="hi" role="menuitem"><span>à¤¹à¤¿à¤¨à¥à¤¦à¥€</span><i>à¤¹à¤¿à¤‚</i></button>
           <button class="lang-option" data-lang="hinglish" role="menuitem"><span>Hinglish</span><i>HG</i></button>
         </div>
       </div>
@@ -75,7 +75,7 @@
         <div class="popover audio-panel" id="audioPanel" aria-label="Sound settings">
           <div class="ap-head">
             <strong data-i18n="prefs.title">Sound &amp; comfort</strong>
-            <button class="ap-close" id="audioClose" aria-label="Close" data-i18n-aria="prefs.close">×</button>
+            <button class="ap-close" id="audioClose" aria-label="Close" data-i18n-aria="prefs.close">Ã—</button>
           </div>
           <label class="pref-row">
             <span data-i18n="prefs.music">Ambient music</span>
@@ -88,6 +88,7 @@
           <label class="range-row">
             <span data-i18n="prefs.style">Score</span>
             <select id="musicStyle" class="mini-select">
+              <option value="vandemataram" data-i18n="style.vandemataram" selected>Vande Mataram (original)</option>
               <option value="tanpura" data-i18n="style.tanpura">Tanpura drone</option>
               <option value="cinematic" data-i18n="style.cinematic">Cinematic pad</option>
               <option value="desh" data-i18n="style.desh">Desh march</option>
@@ -128,11 +129,11 @@
 
   <div class="hero">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="pulse-dot"></span> <span data-i18n="home.eyebrow">UPSC Polity · Interactive Simulator</span></div>
+      <div class="eyebrow"><span class="pulse-dot"></span> <span data-i18n="home.eyebrow">UPSC Polity Â· Interactive Simulator</span></div>
       <h1 data-i18n-html="home.title">Enter the <em>House.</em><br>Decide the <em>Nation.</em></h1>
       <p class="lede" data-i18n="home.lede">
         Take the Chair. Move bills, call divisions and discover exactly which majority the
-        Constitution demands — from Money Bills to the impeachment of a President.
+        Constitution demands â€” from Money Bills to the impeachment of a President.
       </p>
       <div class="hero-cta">
         <button class="btn btn-gold" data-nav="select">
@@ -143,7 +144,7 @@
       </div>
       <div class="hero-stats">
         <div><b id="statBills">0</b><span data-i18n="home.stat1">Procedures mastered</span></div>
-        <div><b id="statAccuracy">—</b><span data-i18n="home.stat2">Majority accuracy</span></div>
+        <div><b id="statAccuracy">â€”</b><span data-i18n="home.stat2">Majority accuracy</span></div>
         <div><b>9</b><span data-i18n="home.stat3">Live scenarios</span></div>
       </div>
     </div>
@@ -291,8 +292,8 @@
         </svg>
 
         <div class="art-ticker">
-          <span><i class="dot-saffron"></i> <span data-i18n="home.ticker.ls">LOK SABHA · 543</span></span>
-          <span><i class="dot-gold"></i> <span data-i18n="home.ticker.rs">RAJYA SABHA · 245</span></span>
+          <span><i class="dot-saffron"></i> <span data-i18n="home.ticker.ls">LOK SABHA Â· 543</span></span>
+          <span><i class="dot-gold"></i> <span data-i18n="home.ticker.rs">RAJYA SABHA Â· 245</span></span>
           <span class="live"><i></i> <span data-i18n="home.ticker.live">LIVE</span></span>
         </div>
       </div>
@@ -302,10 +303,10 @@
 
   <div class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>◆</i><span data-i18n="bill.money">MONEY BILL</span><i>◆</i><span data-i18n="bill.finance">FINANCE BILL</span><i>◆</i>
-      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>◆</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>◆</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>◆</i>
-      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>◆</i><span data-i18n="bill.money">MONEY BILL</span><i>◆</i><span data-i18n="bill.finance">FINANCE BILL</span><i>◆</i>
-      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>◆</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>◆</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>◆</i>
+      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>â—†</i><span data-i18n="bill.money">MONEY BILL</span><i>â—†</i><span data-i18n="bill.finance">FINANCE BILL</span><i>â—†</i>
+      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>â—†</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>â—†</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>â—†</i>
+      <span data-i18n="bill.ordinary">ORDINARY BILL</span><i>â—†</i><span data-i18n="bill.money">MONEY BILL</span><i>â—†</i><span data-i18n="bill.finance">FINANCE BILL</span><i>â—†</i>
+      <span data-i18n="bill.amendment">CONSTITUTIONAL AMENDMENT</span><i>â—†</i><span data-i18n="bill.noconfidence">NO-CONFIDENCE</span><i>â—†</i><span data-i18n="bill.impeachment">IMPEACHMENT</span><i>â—†</i>
     </div>
   </div>
 
@@ -379,7 +380,7 @@
           <i style="--h:56%"></i><i style="--h:40%"></i><i style="--h:48%"></i><i style="--h:62%"></i>
           <i style="--h:65%"></i><i style="--h:54%"></i>
         </div>
-        <p data-i18n="home.history.caption">18 Lok Sabhas · one Constitution</p>
+        <p data-i18n="home.history.caption">18 Lok Sabhas Â· one Constitution</p>
       </div>
     </div>
   </section>
@@ -396,20 +397,20 @@
       <article class="feature-card">
         <div class="feature-icon" data-icon="houses"></div>
         <h3 data-i18n="home.f1.title">Two Houses, one law</h3>
-        <p data-i18n="home.f1.text">Watch a bill travel from the Lok Sabha to the Rajya Sabha — and learn exactly where the Upper House can stall, amend or only recommend.</p>
-        <span class="feature-tag" data-i18n="home.f1.tag">Art. 107–109</span>
+        <p data-i18n="home.f1.text">Watch a bill travel from the Lok Sabha to the Rajya Sabha â€” and learn exactly where the Upper House can stall, amend or only recommend.</p>
+        <span class="feature-tag" data-i18n="home.f1.tag">Art. 107â€“109</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="seats"></div>
         <h3 data-i18n="home.f2.title">Live division</h3>
         <p data-i18n="home.f2.text">543 and 245 seats light up vote by vote. See the Treasury and Opposition benches, the abstentions, and the exact threshold a bill must cross.</p>
-        <span class="feature-tag" data-i18n="home.f2.tag">Division · Voice · Ballot</span>
+        <span class="feature-tag" data-i18n="home.f2.tag">Division Â· Voice Â· Ballot</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="scales"></div>
         <h3 data-i18n="home.f3.title">Nine procedures</h3>
         <p data-i18n="home.f3.text">Ordinary, Money and Finance Bills, constitutional amendments, no-confidence, and the removal of the President, Vice-President, Speaker and judges.</p>
-        <span class="feature-tag" data-i18n="home.f3.tag">Bills · Motions · Removals</span>
+        <span class="feature-tag" data-i18n="home.f3.tag">Bills Â· Motions Â· Removals</span>
       </article>
       <article class="feature-card">
         <div class="feature-icon" data-icon="book"></div>
@@ -511,14 +512,14 @@
       <div class="chamber-legend" id="simLegend"></div>
       <div class="chamber-tally" id="simTally"></div>
       <div class="chamber-foot">
-        <div><span data-i18n="sim.foot.pm">Prime Minister</span><b id="simPM">—</b></div>
-        <div><span data-i18n="sim.foot.threshold">Majority mark</span><b id="simThreshold">—</b></div>
+        <div><span data-i18n="sim.foot.pm">Prime Minister</span><b id="simPM">â€”</b></div>
+        <div><span data-i18n="sim.foot.threshold">Majority mark</span><b id="simThreshold">â€”</b></div>
       </div>
     </aside>
 
     <div class="sim-panel">
       <div class="panel-card sim-controls">
-        <span class="stage-chip" id="simTermChip">Lok Sabha 18 · 2024</span>
+        <span class="stage-chip" id="simTermChip">Lok Sabha 18 Â· 2024</span>
 
         <div class="sim-block sim-year-block">
           <div class="sim-year-head">
@@ -527,8 +528,8 @@
               <div class="sim-year-value" id="simYearValue">2024</div>
             </div>
             <div class="sim-year-nav">
-              <button type="button" id="simPrevYear" aria-label="Previous election" data-i18n-aria="sim.year.prev">←</button>
-              <button type="button" id="simNextYear" aria-label="Next election" data-i18n-aria="sim.year.next">→</button>
+              <button type="button" id="simPrevYear" aria-label="Previous election" data-i18n-aria="sim.year.prev">â†</button>
+              <button type="button" id="simNextYear" aria-label="Next election" data-i18n-aria="sim.year.next">â†’</button>
             </div>
           </div>
           <input type="range" id="simYear" min="0" max="17" step="1" value="17" aria-label="Election year" data-i18n-aria="sim.year.label">
@@ -615,7 +616,7 @@
   </div>
 
   <div class="sim-footnotes">
-    <p data-i18n="sim.note">Seat totals are historical. Bloc strengths, especially in the Rajya Sabha, are rounded and illustrative — the point is the arithmetic of the Constitution, not an exact party tally.</p>
+    <p data-i18n="sim.note">Seat totals are historical. Bloc strengths, especially in the Rajya Sabha, are rounded and illustrative â€” the point is the arithmetic of the Constitution, not an exact party tally.</p>
     <p id="simSources"></p>
   </div>
 </section>
@@ -625,14 +626,14 @@
   <div class="em-wrap">
     <div class="em-alert" role="note">
       <span class="em-alert-dot" aria-hidden="true"></span>
-      <span data-i18n="emergency.alert">CONSTITUTIONAL EMERGENCY · 25 JUNE 1975 — 21 MARCH 1977</span>
+      <span data-i18n="emergency.alert">CONSTITUTIONAL EMERGENCY Â· 25 JUNE 1975 â€” 21 MARCH 1977</span>
     </div>
 
     <div class="em-hero">
       <div class="em-hero-copy">
         <span class="em-kicker" data-i18n="emergency.kicker">A black day in constitutional history</span>
         <h1 data-i18n-html="emergency.title">The <em>Emergency.</em></h1>
-        <p class="em-lede" data-i18n="emergency.lede">On 25 June 1975 the Constitution was turned against itself. For twenty-one months, fundamental rights were suspended, the press was censored, and citizens were detained without trial. This is the record — and the correction that followed.</p>
+        <p class="em-lede" data-i18n="emergency.lede">On 25 June 1975 the Constitution was turned against itself. For twenty-one months, fundamental rights were suspended, the press was censored, and citizens were detained without trial. This is the record â€” and the correction that followed.</p>
         <div class="em-hero-foot">
           <button class="btn em-btn" data-nav="home">
             <span data-i18n="emergency.back">Home</span>
@@ -643,7 +644,7 @@
       <div class="em-date-card" aria-hidden="true">
         <span class="em-date-label" data-i18n="emergency.date">25 JUNE 1975</span>
         <b>1975</b>
-        <i>— 1977</i>
+        <i>â€” 1977</i>
       </div>
     </div>
 
@@ -664,7 +665,7 @@
           <p data-i18n="emergency.t2.text">Fundamental rights are suspended and habeas corpus is effectively shut. Thousands are detained under MISA and the Defence of India Rules.</p>
         </li>
         <li class="em-tl-item">
-          <span class="em-tl-date" data-i18n="emergency.t3.date">1975–76</span>
+          <span class="em-tl-date" data-i18n="emergency.t3.date">1975â€“76</span>
           <h3 data-i18n="emergency.t3.title">The press goes quiet</h3>
           <p data-i18n="emergency.t3.text">Pre-censorship is imposed. Newspapers leave front pages blank in protest, and foreign correspondents are expelled.</p>
         </li>
@@ -676,7 +677,7 @@
         <li class="em-tl-item">
           <span class="em-tl-date" data-i18n="emergency.t5.date">1976</span>
           <h3 data-i18n="emergency.t5.title">The 42nd Amendment</h3>
-          <p data-i18n="emergency.t5.text">The “Mini Constitution” adds Socialist and Secular to the Preamble, curtails judicial review, and extends the Lok Sabha’s term.</p>
+          <p data-i18n="emergency.t5.text">The â€œMini Constitutionâ€ adds Socialist and Secular to the Preamble, curtails judicial review, and extends the Lok Sabhaâ€™s term.</p>
         </li>
         <li class="em-tl-item">
           <span class="em-tl-date" data-i18n="emergency.t6.date">21 March 1977</span>
@@ -695,7 +696,7 @@
         <article class="em-card">
           <span class="em-num">01</span>
           <h3 data-i18n="emergency.c1.title">The trigger</h3>
-          <p data-i18n="emergency.c1.text">Article 352 allowed a proclamation for “internal disturbance”. The 44th Amendment replaced that ground with “armed rebellion” and required written Cabinet advice.</p>
+          <p data-i18n="emergency.c1.text">Article 352 allowed a proclamation for â€œinternal disturbanceâ€. The 44th Amendment replaced that ground with â€œarmed rebellionâ€ and required written Cabinet advice.</p>
           <span class="em-tag">Art. 352</span>
         </article>
         <article class="em-card">
@@ -734,7 +735,7 @@
     <blockquote class="em-quote">
       <span class="em-label" data-i18n="emergency.quote.kicker">Remember</span>
       <p data-i18n="emergency.quote.text">A Constitution that can be suspended in the name of the Constitution has already been wounded.</p>
-      <cite data-i18n="emergency.quote.author">The lesson of 1975–77</cite>
+      <cite data-i18n="emergency.quote.author">The lesson of 1975â€“77</cite>
     </blockquote>
 
     <section class="em-lesson">
@@ -745,10 +746,10 @@
       </div>
       <ul class="em-list">
         <li data-i18n="emergency.lesson.l1">A proclamation needs the written advice of the Cabinet.</li>
-        <li data-i18n="emergency.lesson.l2">The ground changed from “internal disturbance” to “armed rebellion”.</li>
+        <li data-i18n="emergency.lesson.l2">The ground changed from â€œinternal disturbanceâ€ to â€œarmed rebellionâ€.</li>
         <li data-i18n="emergency.lesson.l3">Parliament must approve it by a special majority within one month.</li>
-        <li data-i18n="emergency.lesson.l4">Articles 20 and 21 — fairness and life — cannot be suspended.</li>
-        <li data-i18n="emergency.lesson.l5">The Lok Sabha’s term reverted to five years.</li>
+        <li data-i18n="emergency.lesson.l4">Articles 20 and 21 â€” fairness and life â€” cannot be suspended.</li>
+        <li data-i18n="emergency.lesson.l5">The Lok Sabhaâ€™s term reverted to five years.</li>
       </ul>
     </section>
 
@@ -839,7 +840,7 @@
       <span data-i18n="roach.back">Back to the House</span>
     </button>
     <div class="roach-heading">
-      <span class="kicker" data-i18n="roach.kicker">Easter egg · Gen Z infestation</span>
+      <span class="kicker" data-i18n="roach.kicker">Easter egg Â· Gen Z infestation</span>
       <h2 data-i18n-html="roach.title">The <em>Roach Rajya.</em></h2>
     </div>
     <div class="roach-best" data-i18n-title="roach.bestHint" title="Your best score on this device">
@@ -898,21 +899,21 @@
     <aside class="roach-side">
       <div class="roach-tools" role="toolbar" aria-label="Roach defence tools">
         <button type="button" class="roach-tool is-active" id="roachCrushBtn" data-tool="crush" aria-pressed="true">
-          <span class="rt-icon" aria-hidden="true">✊</span>
+          <span class="rt-icon" aria-hidden="true">âœŠ</span>
           <span class="rt-copy"><b data-i18n="roach.tool.crush">Crush</b><i data-i18n="roach.tool.crushHint">Tap a roach</i></span>
         </button>
         <button type="button" class="roach-tool" id="roachSprayBtn" data-tool="spray" aria-pressed="false">
-          <span class="rt-icon" aria-hidden="true">💨</span>
+          <span class="rt-icon" aria-hidden="true">ðŸ’¨</span>
           <span class="rt-copy"><b data-i18n="roach.tool.spray">Spray</b><i data-i18n="roach.tool.sprayHint">Push a crowd back</i></span>
         </button>
         <button type="button" class="roach-tool roach-reform" id="roachReformBtn" disabled>
-          <span class="rt-icon" aria-hidden="true">⚖️</span>
+          <span class="rt-icon" aria-hidden="true">âš–ï¸</span>
           <span class="rt-copy"><b data-i18n="roach.tool.reform">Reform</b><i data-i18n="roach.tool.reformHint">Needs 100 order</i></span>
         </button>
       </div>
 
       <p class="roach-help" id="roachHelp" data-i18n="roach.help">Crush for combo points. Spray to buy space. Fill the order bar to unlock Reform.</p>
-      <p class="roach-keys" data-i18n="roach.keys">Keys: 1 crush · 2 spray · C nearest crush · S centre spray · R reform</p>
+      <p class="roach-keys" data-i18n="roach.keys">Keys: 1 crush Â· 2 spray Â· C nearest crush Â· S centre spray Â· R reform</p>
 
       <div class="roach-legend">
         <span><b>+10</b> <span data-i18n="roach.legend.crush">per crush</span></span>
@@ -943,30 +944,30 @@
       <button data-nav="simulator" data-i18n="footer.links.history">History</button>
       <button data-nav="emergency" data-i18n="footer.links.emergency">Emergency</button>
       <button data-nav="learn" data-i18n="footer.links.lab">Polity Lab</button>
-      <button class="footer-roach" data-nav="roaches" data-i18n-title="roach.trigger"><span aria-hidden="true">🪳</span> <span data-i18n="roach.nav">Cockroaches</span></button>
+      <button class="footer-roach" data-nav="roaches" data-i18n-title="roach.trigger"><span aria-hidden="true">ðŸª³</span> <span data-i18n="roach.nav">Cockroaches</span></button>
     </div>
   </div>
   <div class="footer-bottom">
-    <span data-i18n="footer.disclaimer">Not an official publication. Procedures simplified for pedagogy — always cross-check with the Constitution and current rules of procedure.</span>
+    <span data-i18n="footer.disclaimer">Not an official publication. Procedures simplified for pedagogy â€” always cross-check with the Constitution and current rules of procedure.</span>
     <span data-i18n="footer.credit">Made with care for the Constitution of India.</span>
   </div>
 </footer>
 
 <button class="roach-secret" id="roachSecret" data-nav="roaches" aria-label="Open the secret Cockroaches game" data-i18n-aria="roach.trigger" data-i18n-title="roach.trigger" title="Open the secret Cockroaches game">
-  <span class="roach-secret-bug" aria-hidden="true">🪳</span>
+  <span class="roach-secret-bug" aria-hidden="true">ðŸª³</span>
   <span class="roach-secret-label" data-i18n="roach.nav">Cockroaches</span>
 </button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <noscript><div class="noscript">This simulator needs JavaScript enabled to run the Parliament.</div></noscript>
 
-<script src="assets/js/data.js?v=20261106b"></script>
-<script src="assets/js/history.js?v=20261106b"></script>
-<script src="assets/js/i18n.js?v=20261106b"></script>
-<script src="assets/js/i18n-hi.js?v=20261106b"></script>
-<script src="assets/js/i18n-hinglish.js?v=20261106b"></script>
-<script src="assets/js/audio.js?v=20261106b"></script>
-<script src="assets/js/roaches.js?v=20261106b"></script>
-<script src="assets/js/app.js?v=20261106b"></script>
+<script src="assets/js/data.js?v=20261106c"></script>
+<script src="assets/js/history.js?v=20261106c"></script>
+<script src="assets/js/i18n.js?v=20261106c"></script>
+<script src="assets/js/i18n-hi.js?v=20261106c"></script>
+<script src="assets/js/i18n-hinglish.js?v=20261106c"></script>
+<script src="assets/js/audio.js?v=20261106c"></script>
+<script src="assets/js/roaches.js?v=20261106c"></script>
+<script src="assets/js/app.js?v=20261106c"></script>
 </body>
 </html>
