@@ -182,6 +182,9 @@ const SansadRedline = (function () {
     }
   };
 
+  const LOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  const UNLOCK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg>';
+
   const ORDER = [];
   CLAUSES.forEach((c) => c.parts.forEach((p) => { if (typeof p === "object") ORDER.push(p.id); }));
   const TOTAL = ORDER.length;
@@ -277,6 +280,8 @@ const SansadRedline = (function () {
       </div>
     </div>`;
 
+    const freed = submitted && score() >= 9;
+    h += `<div class="rl-shackle${freed ? " is-snapped" : ""}" aria-hidden="true"><i class="ch"></i><span class="lock">${freed ? UNLOCK_SVG : LOCK_SVG}</span><i class="ch"></i></div>`;
     h += `<div class="rl-paper" lang="en">`;
     h += `<div class="rl-paper-head"><span>The Constitution of India</span><span>${t("redline.paper.rev")}</span></div>`;
     CLAUSES.forEach((c) => {
