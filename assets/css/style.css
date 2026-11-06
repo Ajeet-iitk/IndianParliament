@@ -1521,7 +1521,7 @@ body.is-dividing .chamber-panel::after {
   .rt-copy i { display: none; }
   .roach-card { padding: 20px 16px 18px; }
   .roach-end-stats { gap: 6px; }
-  .roach-secret { bottom: 86px; left: 12px; padding: 8px; }
+  .roach-secret { bottom: 16px; left: 8px; padding: 7px; }
   .roach-secret-label { display: none; }
   body.is-roaching { padding-bottom: 0; }
   body.is-roaching .mobile-dock { display: none; }
@@ -1540,6 +1540,10 @@ body.is-dividing .chamber-panel::after {
   .roach-rules li { font-size: .68rem; }
   .gallery-stage { height: 190px; }
   .gallery-caption { font-size: .58rem; }
+}
+@media (max-width: 340px) {
+  .roach-secret { left: 6px; padding: 3px; }
+  .roach-secret-bug { font-size: .95rem; }
 }
 
 /* Day theme */
