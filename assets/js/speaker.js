@@ -128,7 +128,8 @@ const SansadSpeaker = (function () {
       orderBar: $("#speakerOrderBar"),
       calm: $("#speakerCalmBtn"),
       suspend: $("#speakerSuspendBtn"),
-      adjourn: $("#speakerAdjournBtn")
+      adjourn: $("#speakerAdjournBtn"),
+      pause: $("#speakerPauseBtn")
     };
     if (!els.arena || !els.overlay) return;
 
@@ -654,6 +655,8 @@ const SansadSpeaker = (function () {
     setTool("calm");
     els.overlay.classList.remove("is-active");
     els.overlay.innerHTML = "";
+    if (els.arena) els.arena.classList.remove("is-paused");
+    if (els.pause) els.pause.hidden = false;
     updateHUD();
     if (Audio) Audio.play("gavelDouble");
 
@@ -674,8 +677,10 @@ const SansadSpeaker = (function () {
     if (!game || !game.active || !visible) return;
     const dt = clamp((ts - lastTs) / 1000, 0, 0.05);
     lastTs = ts;
-    step(dt);
-    renderFrame();
+    if (!game.paused) {
+      step(dt);
+      renderFrame();
+    }
     if (game && game.active && visible) raf = requestAnimationFrame(loop);
   }
 
@@ -884,6 +889,7 @@ const SansadSpeaker = (function () {
     saveBest();
     renderBest();
     updateHUD();
+    if (els.pause) els.pause.hidden = true;
     renderEnd();
     if (Audio) Audio.play(reason === "quorum" ? "defeat" : "victory");
   }
@@ -915,6 +921,12 @@ const SansadSpeaker = (function () {
     els.suspended.textContent = String(game.suspended);
     if (els.quorumBar) els.quorumBar.style.width = clamp((game.quorum / 90) * 100, 0, 100) + "%";
     if (els.orderBar) els.orderBar.style.width = clamp((game.order / ORDER_ADJOURN) * 100, 0, 100) + "%";
+
+    const stat = (el) => (el ? el.closest(".sstat") : null);
+    const timeBox = stat(els.time), quorumBox = stat(els.quorum), orderBox = stat(els.order);
+    if (timeBox) timeBox.classList.toggle("is-danger", game.active && game.time <= 15);
+    if (quorumBox) quorumBox.classList.toggle("is-danger", game.active && game.quorum < QUORUM_MIN);
+    if (orderBox) orderBox.classList.toggle("is-ready", game.active && game.order >= ORDER_ADJOURN);
 
     const canAdjourn = game.active && game.order >= ORDER_ADJOURN && game.quorum >= QUORUM_MIN;
     if (els.adjourn) {
@@ -963,6 +975,29 @@ const SansadSpeaker = (function () {
     els.combo.classList.remove("is-showing");
     void els.combo.offsetWidth;
     els.combo.classList.add("is-showing");
+  }
+
+  function setPaused(next) {
+    if (!game || !game.active || !els.overlay) return;
+    next = !!next;
+    if (game.paused === next) return;
+    game.paused = next;
+    lastTs = performance.now();
+    if (next) {
+      els.overlay.innerHTML = '<div class="roach-card">' +
+        '<span class="kicker">' + t("speaker.kicker") + '</span>' +
+        '<h3>' + t("speaker.paused.title") + '</h3>' +
+        '<p>' + t("speaker.paused.text") + '</p>' +
+        '<div class="roach-actions">' +
+          '<button type="button" class="btn btn-gold" data-speaker-resume>' + t("speaker.resume") + '</button>' +
+          '<button type="button" class="btn btn-ghost" data-nav="home">' + t("speaker.quit") + '</button>' +
+        '</div></div>';
+      els.overlay.classList.add("is-active");
+    } else {
+      els.overlay.classList.remove("is-active");
+      els.overlay.innerHTML = "";
+    }
+    if (els.arena) els.arena.classList.toggle("is-paused", next);
   }
 
   function renderIdle() {
@@ -1027,7 +1062,7 @@ const SansadSpeaker = (function () {
   }
 
   function onPointerDown(e) {
-    if (!game || !game.active) return;
+    if (!game || !game.active || game.paused) return;
     if (e.button != null && e.button !== 0) return;
     if (e.target && e.target !== renderer.domElement && !renderer.domElement.contains(e.target)) return;
 
@@ -1058,6 +1093,33 @@ const SansadSpeaker = (function () {
     else calmMP(mp);
   }
 
+  /* hover feedback: highlight the MP under the cursor */
+  let hoverMP = null;
+  function setHover(mp) {
+    if (hoverMP === mp) return;
+    if (hoverMP && hoverMP.mesh) hoverMP.mesh.traverse((o) => { if (o.material && o.material.emissive) o.material.emissive.setHex(0x000000); });
+    hoverMP = mp;
+    if (mp && mp.mesh) mp.mesh.traverse((o) => { if (o.material && o.material.emissive) o.material.emissive.setHex(0x4a3a12); });
+    if (els.arena) els.arena.classList.toggle("is-aiming", !!mp);
+  }
+
+  function onPointerMove(e) {
+    if (!game || !game.active || game.paused || e.pointerType === "touch") { if (hoverMP) setHover(null); return; }
+    const rect = els.arena.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(pointer, camera);
+    const hits = raycaster.intersectObjects(mpGroup.children, true);
+    let found = null;
+    if (hits.length) {
+      let node = hits[0].object;
+      while (node.parent && node.parent !== mpGroup) node = node.parent;
+      const p = pickables.find((x) => x.mesh === node && x.kind === "mp");
+      if (p && !p.ref.dead && p.ref.state !== "leaving") found = p.ref;
+    }
+    setHover(found);
+  }
+
   function nearestActive() {
     if (!game) return null;
     let chosen = null;
@@ -1073,6 +1135,10 @@ const SansadSpeaker = (function () {
 
   function bindEvents() {
     els.arena.addEventListener("pointerdown", onPointerDown);
+    els.arena.addEventListener("pointermove", onPointerMove);
+    els.arena.addEventListener("pointerleave", () => setHover(null));
+    if (els.pause) els.pause.addEventListener("click", () => setPaused(!(game && game.paused)));
+    document.addEventListener("visibilitychange", () => { if (document.hidden) setPaused(true); });
 
     if (els.calm) els.calm.addEventListener("click", () => setTool("calm"));
     if (els.suspend) els.suspend.addEventListener("click", () => setTool("suspend"));
@@ -1082,13 +1148,20 @@ const SansadSpeaker = (function () {
       if (e.target.closest("[data-speaker-start]") || e.target.closest("[data-speaker-replay]")) {
         e.preventDefault();
         startGame();
+      } else if (e.target.closest("[data-speaker-resume]")) {
+        e.preventDefault();
+        setPaused(false);
       }
     });
 
     document.addEventListener("keydown", (e) => {
       if (!visible) return;
       if (e.target && e.target.matches("input, select, textarea, [contenteditable]")) return;
-      if (e.key === "1") { e.preventDefault(); setTool("calm"); }
+      if (e.key === "p" || e.key === "P" || e.key === "Escape") {
+        if (game && game.active) { e.preventDefault(); setPaused(!game.paused); }
+      }
+      else if (game && game.paused) { return; }
+      else if (e.key === "1") { e.preventDefault(); setTool("calm"); }
       else if (e.key === "2") { e.preventDefault(); setTool("suspend"); }
       else if (e.key === "a" || e.key === "A") {
         if (game && game.active) { e.preventDefault(); tryAdjourn(); }
@@ -1151,6 +1224,7 @@ const SansadSpeaker = (function () {
   }
 
   function leave() {
+    setPaused(true);
     visible = false;
     if (raf) cancelAnimationFrame(raf);
     raf = 0;

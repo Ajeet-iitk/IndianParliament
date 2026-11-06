@@ -2647,3 +2647,51 @@ html[data-emergency="true"] {
 @keyframes lockBreak { 0% { transform: scale(1.25) rotate(-12deg); } 30% { transform: scale(1.35) rotate(14deg); } 100% { transform: none; } }
 @keyframes linkLeft { 0% { transform: translateX(14px); } 100% { transform: none; } }
 @keyframes linkRight { 0% { transform: translateX(-14px); } 100% { transform: none; } }
+
+/* ============================================================
+   Speaker game polish
+   ============================================================ */
+.speaker-stage { position: relative; }
+.speaker-pause {
+  position: absolute; z-index: 12; top: 12px; left: 12px; width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--cream);
+  background: rgba(9, 15, 31, .72); border: 1px solid var(--line); backdrop-filter: blur(8px);
+  touch-action: manipulation; transition: .25s var(--ease);
+}
+.speaker-pause[hidden] { display: none; }
+.speaker-pause:hover { color: var(--gold-bright); transform: scale(1.06); }
+.speaker-pause svg { width: 16px; height: 16px; }
+.speaker-arena.is-aiming { cursor: pointer; }
+.speaker-arena[data-tool="suspend"].is-aiming { cursor: not-allowed; }
+.speaker-arena.is-paused canvas { filter: blur(3px) saturate(.7); }
+
+.sstat { position: relative; transition: border-color .3s, box-shadow .3s, background .3s; }
+.sstat.is-danger { border-color: rgba(226, 87, 107, .7); background: rgba(226, 87, 107, .1); animation: sstatPulse 1s ease-in-out infinite; }
+.sstat.is-danger b { color: #ff8a9a; }
+.sstat.is-ready { border-color: rgba(247, 213, 156, .7); box-shadow: 0 0 0 1px rgba(247, 213, 156, .25), 0 0 22px rgba(232, 182, 103, .25); }
+.sstat.is-ready b { color: var(--gold-bright); }
+@keyframes sstatPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(226, 87, 107, .35); } 50% { box-shadow: 0 0 0 5px rgba(226, 87, 107, 0); } }
+/* threshold ticks on the bars: quorum 55/90, order 100/100 */
+.sstat-quorum .rbar, .sstat-order .rbar { position: relative; overflow: visible; }
+.sstat-quorum .rbar::after { content: ""; position: absolute; top: -3px; bottom: -3px; left: 61.1%; width: 2px; background: #f7d59c; border-radius: 2px; opacity: .85; }
+
+.speaker-overlay .roach-card { max-height: 100%; overflow: auto; }
+
+@media (max-width: 980px) {
+  /* keep the Calm / Suspend / Adjourn buttons above the arena so they stay in reach */
+  .speaker-stage { display: flex; flex-direction: column; gap: 12px; }
+  .speaker-side { display: contents; }
+  .speaker-tools { order: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .speaker-arena { order: 2; }
+  .speaker-help, .speaker-keys, .speaker-legend, .speaker-mp-types, .speaker-quit { order: 3; }
+  .speaker-tool { flex-direction: column; align-items: center; text-align: center; gap: 4px; padding: 10px 6px; }
+  .speaker-tool .st-copy i { display: none; }
+  .speaker-tool .st-copy b { font-size: .64rem; }
+  .speaker-pause { top: 66px; }
+  .speaker-keys { display: none; }
+}
+@media (max-width: 760px) {
+  .speaker-lede { display: none; }
+  .speaker-hud { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 12px 0; }
+  .sstat-suspended { display: none; }
+}
