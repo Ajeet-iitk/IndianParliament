@@ -399,6 +399,10 @@ const I18N = {
 
       "roach.nav": "Cockroaches",
       "roach.trigger": "Open the secret Cockroaches game",
+      "home.roach.kicker": "Secret level · 60 seconds",
+      "home.roach.title": "Defend the Constitution from the <em>Roach Rajya.</em>",
+      "home.roach.text": "Gen Z cockroaches are swarming the gallery. Spray them, crush them, or pass reform before they reach the Constitution.",
+      "home.roach.cta": "Play the Cockroaches game",
       "roach.bestHint": "Your best score on this device",
       "roach.meta.title": "Cockroaches · Sansad",
       "roach.back": "Back to the House",
@@ -896,6 +900,10 @@ const I18N = {
 
       "roach.nav": "कॉकरोच",
       "roach.trigger": "गुप्त कॉकरोच गेम खोलें",
+      "home.roach.kicker": "गुप्त स्तर · 60 सेकंड",
+      "home.roach.title": "संविधान को <em>रोच राज्य</em> से बचाइए।",
+      "home.roach.text": "जेन ज़ी कॉकरोच दीर्घा में घुस आए हैं। उन्हें स्प्रे करें, कुचलें या सुधार पारित करें — संविधान तक पहुँचने से पहले।",
+      "home.roach.cta": "कॉकरोच गेम खेलें",
       "roach.bestHint": "इस डिवाइस पर आपका सर्वश्रेष्ठ स्कोर",
       "roach.meta.title": "कॉकरोच · संसद",
       "roach.back": "सदन में वापस",
@@ -1393,6 +1401,10 @@ const I18N = {
 
       "roach.nav": "Cockroaches",
       "roach.trigger": "Secret Cockroaches game kholiye",
+      "home.roach.kicker": "Secret level · 60 second",
+      "home.roach.title": "Constitution ko <em>Roach Rajya</em> se bachaiye.",
+      "home.roach.text": "Gen Z cockroaches gallery mein ghus aaye hain. Spray kijiye, kuchliye, ya reform pass kijiye — Constitution tak pahunchne se pehle.",
+      "home.roach.cta": "Cockroaches game khelein",
       "roach.bestHint": "Is device par aapka best score",
       "roach.meta.title": "Cockroaches · Sansad",
       "roach.back": "House mein wapas",
