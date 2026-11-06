@@ -10,6 +10,7 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const Audio = typeof SansadAudio !== "undefined" ? SansadAudio : null;
   const Roaches = typeof SansadRoaches !== "undefined" ? SansadRoaches : null;
+  const Speaker = typeof SansadSpeaker !== "undefined" ? SansadSpeaker : null;
   const Redline = typeof SansadRedline !== "undefined" ? SansadRedline : null;
   const STORE_KEY = "sansad.progress.v1";
   const LANG_KEY = "sansad.lang.v1";
@@ -242,6 +243,7 @@
     }
     syncThemeColor();
     document.body.classList.toggle("is-roaching", name === "roaches");
+    document.body.classList.toggle("is-speaking", name === "speaker");
     if (name === "roaches") {
       if (Roaches) {
         Roaches.setT(t);
@@ -251,6 +253,16 @@
       document.title = t("roach.meta.title");
     } else if (Roaches) {
       Roaches.leave();
+    }
+    if (name === "speaker") {
+      if (Speaker) {
+        Speaker.setT(t);
+        Speaker.setReduced(reduceMotion);
+        Speaker.enter();
+      }
+      document.title = t("speaker.meta.title");
+    } else if (Speaker) {
+      Speaker.leave();
     }
 
     $$(".screen").forEach((s) => s.classList.toggle("is-active", s.dataset.screen === name));
@@ -271,7 +283,7 @@
       document.title = t("meta.title");
       renderFeatured();
       updateStats();
-    } else if (name !== "roaches" && name !== "game" && name !== "simulator" && name !== "emergency") {
+    } else if (name !== "roaches" && name !== "game" && name !== "simulator" && name !== "emergency" && name !== "speaker") {
       document.title = t("meta.title");
     }
   }
@@ -440,7 +452,8 @@
       return `<circle class="seat ${cls}${lit}" cx="${s.x.toFixed(1)}" cy="${s.y.toFixed(1)}" r="${radius}"${style}/>`;
     }).join("");
 
-    const chair = key === "RS" ? t("chair.rs") : key === "JOINT" ? t("chair.joint") : t("chair.ls");
+    const deputyPresides = key === "LS" && game && game.scenario && game.scenario.id === "speaker";
+    const chair = deputyPresides ? t("chair.deputy") : key === "RS" ? t("chair.rs") : key === "JOINT" ? t("chair.joint") : t("chair.ls");
 
     const svg = `<svg viewBox="0 0 640 372" role="img" aria-label="${escapeHTML(t("house." + key))}">
       <ellipse cx="320" cy="330" rx="242" ry="24" fill="rgba(232,182,103,.035)"/>
@@ -454,7 +467,7 @@
     if (gamePanel) gamePanel.dataset.house = key;
     $("#chamberBadge").textContent = info.badge;
     $("#chamberCount").textContent = t("game.seats", { n: info.total });
-    $("#presidingName").textContent = info.presiding;
+    $("#presidingName").textContent = deputyPresides ? t("role.deputySpeaker") : info.presiding;
     $("#chamberMajority").textContent = opts.majorityLabel || (statuses ? "—" : t("game.tbd"));
 
     if (statuses) {
@@ -1178,6 +1191,7 @@
     const motion = $("#motionToggle");
     if (motion) motion.checked = reduceMotion;
     if (Roaches) Roaches.setReduced(reduceMotion);
+    if (Speaker) Speaker.setReduced(reduceMotion);
     toast(t(reduceMotion ? "toast.motion" : "toast.motionOff"));
   }
 
@@ -1697,6 +1711,11 @@
       Roaches.setReduced(reduceMotion);
       Roaches.refreshLanguage();
     }
+    if (Speaker) {
+      Speaker.setT(t);
+      Speaker.setReduced(reduceMotion);
+      Speaker.refreshLanguage();
+    }
     if (Redline) {
       Redline.setT(t);
       Redline.refreshLanguage();
@@ -1746,6 +1765,11 @@
       Roaches.setT(t);
       Roaches.setReduced(reduceMotion);
       Roaches.init();
+    }
+    if (Speaker) {
+      Speaker.setT(t);
+      Speaker.setReduced(reduceMotion);
+      Speaker.init();
     }
     if (Redline) {
       Redline.setT(t);

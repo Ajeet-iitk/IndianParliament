@@ -14,7 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=20261106i">
+<link rel="stylesheet" href="assets/css/style.css?v=20261106s">
 </head>
 <body>
 
@@ -42,6 +42,7 @@
     <button class="nav-link" data-nav="select" data-i18n="nav.order">Order Paper</button>
     <button class="nav-link" data-nav="simulator" data-i18n="nav.history">History</button>
     <button class="nav-link" data-nav="emergency" data-i18n="nav.emergency">Emergency</button>
+    <button class="nav-link" data-nav="speaker" data-i18n="nav.speaker">Speaker Game</button>
     <button class="nav-link" data-nav="learn" data-i18n="nav.lab">Polity Lab</button>
   </nav>
 
@@ -119,6 +120,7 @@
   <button class="dock-link" data-nav="select" data-i18n="nav.order">Order Paper</button>
   <button class="dock-link" data-nav="simulator" data-i18n="nav.history">History</button>
   <button class="dock-link" data-nav="emergency" data-i18n="nav.emergency">Emergency</button>
+  <button class="dock-link" data-nav="speaker" data-i18n="nav.speaker">Speaker Game</button>
   <button class="dock-link" data-nav="learn" data-i18n="nav.lab">Polity Lab</button>
 </nav>
 
@@ -368,6 +370,21 @@
       </div>
       <button class="btn btn-gold" data-nav="roaches">
         <span data-i18n="home.roach.cta">Play the Cockroaches game</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <section class="section roach-teaser">
+    <div class="roach-card-home speaker-card-home">
+      <span class="rch-bug speaker-emblem" aria-hidden="true">⚖️</span>
+      <div class="rch-copy">
+        <span class="kicker" data-i18n="home.speaker.kicker">Three.js · Chaos on the floor</span>
+        <h2 data-i18n-html="home.speaker.title">Calm. Suspend. <em>Adjourn.</em></h2>
+        <p data-i18n="home.speaker.text">Take the Chair as Speaker. MPs swarm the Well, hurl chairs and paper, and wave placards. Say <b>Baith jaiye</b> — and keep the House alive.</p>
+      </div>
+      <button class="btn btn-gold" data-nav="speaker">
+        <span data-i18n="home.speaker.cta">Play the Speaker's Chair</span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </button>
     </div>
@@ -863,6 +880,101 @@
   <div class="learn-body" id="learnBody"></div>
 </section>
 
+<!-- ============================= SPEAKER GAME ============================= -->
+<section class="screen speaker-screen" id="screen-speaker" data-screen="speaker">
+  <div class="speaker-top">
+    <button class="back-link" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+      <span data-i18n="speaker.back">Home</span>
+    </button>
+    <div class="speaker-heading">
+      <span class="kicker" data-i18n="speaker.kicker">Three.js Survival</span>
+      <h2 data-i18n-html="speaker.title">The <em>Speaker's Chair.</em></h2>
+    </div>
+    <div class="speaker-best" data-i18n-title="speaker.bestHint" title="Your best score on this device">
+      <span data-i18n="speaker.best">Best</span><b id="speakerBest">0</b>
+    </div>
+  </div>
+
+  <p class="speaker-lede" data-i18n="speaker.lede">You are the Speaker in the Chair. MPs swarm the Well, hurl chairs and paper, wave placards. Calm them (<kbd>Baith jaiye</kbd>), suspend the unruly, adjourn the House — but keep quorum. Survive the session.</p>
+
+  <div class="speaker-hud">
+    <div class="sstat">
+      <span data-i18n="speaker.score">Score</span>
+      <b id="speakerScore">0</b>
+    </div>
+    <div class="sstat">
+      <span data-i18n="speaker.time">Time</span>
+      <b id="speakerTime">120</b>
+    </div>
+    <div class="sstat">
+      <span data-i18n="speaker.quorum">Quorum</span>
+      <b id="speakerQuorum">55</b>
+      <i class="rbar"><span id="speakerQuorumBar"></span></i>
+    </div>
+    <div class="sstat">
+      <span data-i18n="speaker.order">Order</span>
+      <b id="speakerOrder">0</b>
+      <i class="rbar"><span id="speakerOrderBar"></span></i>
+    </div>
+    <div class="sstat sstat-suspended">
+      <span data-i18n="speaker.suspended">Suspended</span>
+      <b id="speakerSuspended">0</b>
+    </div>
+  </div>
+
+  <div class="speaker-stage">
+    <div class="speaker-arena" id="speakerArena" aria-label="Speaker's Chair game" aria-describedby="speakerHelp">
+      <div class="speaker-backdrop" aria-hidden="true">
+        <span class="speaker-pillar"></span><span class="speaker-pillar"></span><span class="speaker-pillar"></span><span class="speaker-pillar"></span>
+      </div>
+      <div class="speaker-well" id="speakerWell" aria-hidden="true"></div>
+      <div class="speaker-dais" id="speakerDais" aria-hidden="true"></div>
+      <div class="speaker-floor" id="speakerFloor"></div>
+      <div class="speaker-fx" id="speakerFx" aria-hidden="true"></div>
+      <div class="speaker-flash" id="speakerFlash" aria-hidden="true"></div>
+      <div class="speaker-combo" id="speakerCombo" role="status" aria-live="polite"></div>
+      <div class="speaker-overlay is-active" id="speakerOverlay"></div>
+    </div>
+
+    <aside class="speaker-side">
+      <div class="speaker-tools" role="toolbar" aria-label="Speaker's tools">
+        <button type="button" class="speaker-tool is-active" id="speakerCalmBtn" data-tool="calm" aria-pressed="true">
+          <span class="st-icon" aria-hidden="true">🤚</span>
+          <span class="st-copy"><b data-i18n="speaker.tool.calm">Calm (Baith jaiye)</b><i data-i18n="speaker.tool.calmHint">Click MPs to calm them</i></span>
+        </button>
+        <button type="button" class="speaker-tool" id="speakerSuspendBtn" data-tool="suspend" aria-pressed="false">
+          <span class="st-icon" aria-hidden="true">📋</span>
+          <span class="st-copy"><b data-i18n="speaker.tool.suspend">Suspend</b><i data-i18n="speaker.tool.suspendHint">Name and suspend unruly MPs</i></span>
+        </button>
+        <button type="button" class="speaker-tool speaker-adjourn" id="speakerAdjournBtn" disabled>
+          <span class="st-icon" aria-hidden="true">🛑</span>
+          <span class="st-copy"><b data-i18n="speaker.tool.adjourn">Adjourn House</b><i data-i18n="speaker.tool.adjournHint">Needs quorum + order</i></span>
+        </button>
+      </div>
+
+      <p class="speaker-help" id="speakerHelp" data-i18n="speaker.help">Calm MPs by clicking them. Suspend the worst offenders. Fill Order to unlock Adjourn. Maintain quorum (55+) or the House falls.</p>
+      <p class="speaker-keys" data-i18n="speaker.keys">Keys: 1 Calm · 2 Suspend · A Adjourn · C nearest calm · S nearest suspend</p>
+
+      <div class="speaker-legend">
+        <span><b>+10</b> <span data-i18n="speaker.legend.calm">per calm</span></span>
+        <span><b>+50</b> <span data-i18n="speaker.legend.suspend">per suspend</span></span>
+        <span><b>+500</b> <span data-i18n="speaker.legend.adjourn">adjourn</span></span>
+      </div>
+
+      <div class="speaker-mp-types">
+        <h4 data-i18n="speaker.mpTypes.title">MP Types</h4>
+        <div class="mp-type-row"><span class="mp-dot protester"></span><span data-i18n="speaker.mpTypes.protester">Protester</span></div>
+        <div class="mp-type-row"><span class="mp-dot thrower"></span><span data-i18n="speaker.mpTypes.thrower">Thrower</span></div>
+        <div class="mp-type-row"><span class="mp-dot placard"></span><span data-i18n="speaker.mpTypes.placard">Placard</span></div>
+        <div class="mp-type-row"><span class="mp-dot leader"></span><span data-i18n="speaker.mpTypes.leader">Leader</span></div>
+      </div>
+
+      <button class="btn btn-ghost speaker-quit" data-nav="home" data-i18n="speaker.quit">Leave the Chair</button>
+    </aside>
+  </div>
+</section>
+
 <!-- ============================= ROACHES (EASTER EGG) ============================= -->
 <section class="screen roach-screen" id="screen-roaches" data-screen="roaches">
   <div class="roach-top">
@@ -974,6 +1086,7 @@
       <button data-nav="select" data-i18n="footer.links.order">Order Paper</button>
       <button data-nav="simulator" data-i18n="footer.links.history">History</button>
       <button data-nav="emergency" data-i18n="footer.links.emergency">Emergency</button>
+      <button data-nav="speaker" data-i18n="footer.links.speaker">Speaker Game</button>
       <button data-nav="learn" data-i18n="footer.links.lab">Polity Lab</button>
       <button class="footer-roach" data-nav="roaches" data-i18n-title="roach.trigger"><span aria-hidden="true">🪳</span> <span data-i18n="roach.nav">Cockroaches</span></button>
     </div>
@@ -992,14 +1105,16 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <noscript><div class="noscript">This simulator needs JavaScript enabled to run the Parliament.</div></noscript>
 
-<script src="assets/js/data.js?v=20261106i"></script>
-<script src="assets/js/history.js?v=20261106i"></script>
-<script src="assets/js/i18n.js?v=20261106i"></script>
-<script src="assets/js/i18n-hi.js?v=20261106i"></script>
-<script src="assets/js/i18n-hinglish.js?v=20261106i"></script>
-<script src="assets/js/audio.js?v=20261106i"></script>
-<script src="assets/js/roaches.js?v=20261106i"></script>
-<script src="assets/js/redline.js?v=20261106i"></script>
-<script src="assets/js/app.js?v=20261106i"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.min.js"></script>
+<script src="assets/js/data.js?v=20261106s"></script>
+<script src="assets/js/history.js?v=20261106s"></script>
+<script src="assets/js/i18n.js?v=20261106s"></script>
+<script src="assets/js/i18n-hi.js?v=20261106s"></script>
+<script src="assets/js/i18n-hinglish.js?v=20261106s"></script>
+<script src="assets/js/audio.js?v=20261106s"></script>
+<script src="assets/js/roaches.js?v=20261106s"></script>
+<script src="assets/js/speaker.js?v=20261106s"></script>
+<script src="assets/js/redline.js?v=20261106s"></script>
+<script src="assets/js/app.js?v=20261106s"></script>
 </body>
 </html>

@@ -845,15 +845,6 @@ const SCENARIOS = [
         why: "Article 96: the Speaker cannot preside while a resolution for their removal is under consideration. The Deputy Speaker presides. The Speaker may still speak and take part in the proceedings."
       },
       {
-        type: "vote",
-        house: "LS",
-        caption: "Resolution · Lok Sabha",
-        total: 543, vacancies: 5, present: 510,
-        ayes: 290, noes: 210, abstain: 10,
-        majority: "effective",
-        note: "The resolution is carried. The effective majority is calculated on 538 members (543 minus 5 vacancies), so the floor was 270."
-      },
-      {
         type: "decision",
         stage: "The Speaker's Rights",
         article: "Art. 96(2)",
@@ -865,7 +856,16 @@ const SCENARIOS = [
           "Only through a lawyer"
         ],
         correct: 1,
-        why: "Article 96(2): the Speaker may speak and take part in the proceedings, and is entitled to vote in the first instance on the removal resolution or on any other matter during those proceedings. But the Speaker cannot exercise a casting vote if the votes are equal. This reverses the normal rule under Article 100, where the Speaker votes only to break a tie."
+        why: "Article 96(2): the Speaker may speak and take part in the proceedings, and is entitled to vote in the first instance on the removal resolution or on any other matter during those proceedings. But the Speaker cannot exercise a casting vote if the votes are equal. This reverses the normal rule under Article 100, where the Speaker votes only to break a tie."},
+      {
+        type: "vote",
+        house: "LS",
+        caption: "Resolution · Lok Sabha",
+        total: 543, vacancies: 5, present: 510,
+        ayes: 290, noes: 210, abstain: 10,
+        majority: "effective",
+        note: "The resolution is carried. The effective majority is calculated on 538 members (543 minus 5 vacancies), so the floor was 270."
+      
       }
     ],
     notes: [

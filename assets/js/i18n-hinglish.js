@@ -523,10 +523,6 @@
           why: "Article 96: Speaker apne removal par vichaar ke dauraan adhyakshta nahi kar sakte. Deputy Speaker adhyakshta karte hain. Speaker phir bhi bol sakte hain aur proceedings mein part le sakte hain."
         },
         {
-          caption: "Resolution · Lok Sabha",
-          note: "Resolution carried. Effective majority 538 members (543 minus 5 vacancies) par calculate hota hai, isliye floor 270 tha."
-        },
-        {
           stage: "The Speaker's Rights",
           q: "Kya Speaker apne removal ki debate mein bol aur vote kar sakte hain?",
           options: [
@@ -535,7 +531,11 @@
             "Haan, par Speaker vote bilkul nahi kar sakte — sirf casting vote",
             "Sirf lawyer ke through"
           ],
-          why: "Article 96(2): Speaker bol sakte hain aur proceedings mein part le sakte hain, aur removal resolution ya un proceedings ke dauraan kisi doosre matter par first instance mein vote ke haqdaar hain. Par votes equal hone par Speaker casting vote nahi de sakte. Yeh Article 100 ke normal rule ko reverse karta hai, jahan Speaker sirf tie break karne ke liye vote dete hain."
+          why: "Article 96(2): Speaker bol sakte hain aur proceedings mein part le sakte hain, aur removal resolution ya un proceedings ke dauraan kisi doosre matter par first instance mein vote ke haqdaar hain. Par votes equal hone par Speaker casting vote nahi de sakte. Yeh Article 100 ke normal rule ko reverse karta hai, jahan Speaker sirf tie break karne ke liye vote dete hain."},
+        {
+          caption: "Resolution · Lok Sabha",
+          note: "Resolution carried. Effective majority 538 members (543 minus 5 vacancies) par calculate hota hai, isliye floor 270 tha."
+        
         }
       ],
       notes: [
