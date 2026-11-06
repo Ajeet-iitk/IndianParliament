@@ -696,6 +696,7 @@ const SansadSpeaker = (function () {
     visible = true;
     lastTs = performance.now();
     raf = requestAnimationFrame(loop);
+    focusStage();
   }
 
   function clearEntities() {
@@ -1010,6 +1011,13 @@ const SansadSpeaker = (function () {
     els.combo.classList.add("is-showing");
   }
 
+  /* phones: bring HUD + tools + arena into view so Start and the controls are never behind the dock */
+  function focusStage() {
+    if (window.innerWidth > 980) return;
+    const hud = $(".speaker-hud");
+    if (hud && hud.scrollIntoView) hud.scrollIntoView({ block: "start", behavior: "auto" });
+  }
+
   function setPaused(next) {
     if (!game || !game.active || !els.overlay) return;
     next = !!next;
@@ -1242,7 +1250,7 @@ const SansadSpeaker = (function () {
     onResize();
     /* the screen becomes visible right after navigate() returns, so
        re-measure on the next frame to pick up the true arena size */
-    requestAnimationFrame(onResize);
+    requestAnimationFrame(() => { onResize(); focusStage(); });
     if (!game) {
       renderIdle();
       renderFrame();

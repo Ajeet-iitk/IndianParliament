@@ -2770,3 +2770,12 @@ html[data-emergency="true"] {
   .speaker-arena { width: 100%; }
   .speaker-tools, .speaker-help, .speaker-legend, .speaker-quit { width: 100%; }
 }
+
+/* Phones: the intro card leads with its Start button, and the stage scrolls clear of the nav and dock */
+.speaker-hud { scroll-margin-top: 72px; }
+@media (max-width: 760px) {
+  .speaker-overlay .roach-card { display: flex; flex-direction: column; }
+  .speaker-overlay .roach-card > p { order: 3; }
+  .speaker-overlay .roach-card .roach-actions { order: 2; }
+  .speaker-arena { margin-bottom: 4px; }
+}
