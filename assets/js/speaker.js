@@ -71,6 +71,22 @@ const SansadSpeaker = (function () {
   let flashT = 0;
   let chantT = 0;
   let ambientLight, keyLight;
+  const camPos = { x: 0, y: 5.4, z: 12.8 };
+  const camLook = { x: 0, y: 0.5, z: 1.2 };
+
+  /* High, pulled-back view so the whole well and the approach to the dias stay in frame.
+     Portrait screens get a wider lens and a longer pull-back. */
+  function frameCamera(w, h) {
+    const portrait = w / h < 1.15;
+    camera.fov = portrait ? 74 : 60;
+    camPos.y = portrait ? 6.6 : 5.4;
+    camPos.z = portrait ? 14.2 : 12.8;
+    camLook.z = portrait ? 1.6 : 1.2;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    camera.position.set(camPos.x, camPos.y, camPos.z);
+    camera.lookAt(camLook.x, camLook.y, camLook.z);
+  }
 
   const TYPE_DEFS = {
     protester: { points: 10, order: 4, speed: 1.15, weight: 5, thrower: false, placard: false },
@@ -176,11 +192,10 @@ const SansadSpeaker = (function () {
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x0b1020);
-    scene.fog = new THREE.Fog(0x0b1020, 26, 46);
+    scene.fog = new THREE.Fog(0x0b1020, 34, 60);
 
-    camera = new THREE.PerspectiveCamera(58, w / h, 0.1, 80);
-    camera.position.set(0, 2.5, 8.6);
-    camera.lookAt(0, 1.15, -1.2);
+    camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 90);
+    frameCamera(w, h);
 
     renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
@@ -229,6 +244,13 @@ const SansadSpeaker = (function () {
     ring.rotation.x = -Math.PI / 2;
     ring.position.set(0, 0.008, 1.4);
     scene.add(ring);
+
+    /* the red line MPs must not cross: the approach to the dias */
+    const lineMat = new THREE.MeshBasicMaterial({ color: 0xe2576b, transparent: true, opacity: 0.4 });
+    const line = new THREE.Mesh(new THREE.PlaneGeometry(13, 0.12), lineMat);
+    line.rotation.x = -Math.PI / 2;
+    line.position.set(0, 0.012, DIAS_LINE);
+    scene.add(line);
 
     /* benches — three arcs on the far side */
     const benchMat = new THREE.MeshLambertMaterial({ color: 0x23304d });
@@ -938,13 +960,13 @@ const SansadSpeaker = (function () {
   function renderFrame() {
     if (!renderer || !scene || !camera) return;
     if (shake > 0) {
-      camera.position.x = rand(-0.12, 0.12) * shake;
-      camera.position.y = 2.5 + rand(-0.1, 0.1) * shake;
+      camera.position.x = camPos.x + rand(-0.12, 0.12) * shake;
+      camera.position.y = camPos.y + rand(-0.1, 0.1) * shake;
     } else {
-      camera.position.x = 0;
-      camera.position.y = 2.5;
+      camera.position.x = camPos.x;
+      camera.position.y = camPos.y;
     }
-    camera.lookAt(0, 1.15, -1.2);
+    camera.lookAt(camLook.x, camLook.y, camLook.z);
     renderer.render(scene, camera);
     if (flashT > 0 && els.flash) {
       els.flash.classList.add("is-active");
@@ -1191,8 +1213,8 @@ const SansadSpeaker = (function () {
     const h = els.arena.clientHeight || 500;
     if (w < 2 || h < 2) return;
     renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
+    frameCamera(w, h);
+    if (!game || !game.active) renderFrame();
   }
 
   /* ----------------------------------------------------------
