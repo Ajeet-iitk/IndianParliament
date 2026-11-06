@@ -2751,3 +2751,15 @@ html[data-emergency="true"] {
   .speaker-tool .st-copy b { font-size: .58rem; }
   .brand-text strong { font-size: 1.1rem; letter-spacing: .1em; }
 }
+
+/* Speaker overlay must stay scrollable/tappable on touch screens (the arena itself blocks panning) */
+.speaker-overlay { touch-action: pan-y; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.speaker-overlay .roach-card { touch-action: pan-y; }
+@media (max-width: 760px) {
+  .speaker-overlay { align-items: center; padding: 8px; }
+  .speaker-overlay .roach-card { max-height: none; padding: 14px 14px 16px; }
+  .speaker-overlay .roach-card > p:not(.roach-tiny):not(:first-of-type) { display: none; }
+  .speaker-overlay .roach-rules, .speaker-overlay .roach-tiny { display: none; }
+  .speaker-overlay .roach-actions { margin-top: 12px; }
+  .speaker-overlay .roach-actions .btn { width: 100%; justify-content: center; padding: 14px 18px; }
+}

@@ -23,7 +23,9 @@ const SansadSpeaker = (function () {
   const SPAWN_Z = -9.5;
   const LEAVE_Z = -10.5;
 
-  const Audio = typeof SansadAudio !== "undefined" ? SansadAudio : null;
+  const RealAudio = typeof SansadAudio !== "undefined" ? SansadAudio : null;
+  /* audio must never be able to stop the game (mobile browsers can throw before unlock) */
+  const Audio = RealAudio ? { play(n) { try { RealAudio.play(n); } catch (_) { /* ignore */ } } } : null;
 
   let t = function (key, vars) {
     const dict = (typeof I18N !== "undefined" && I18N.en && I18N.en.ui) || {};
@@ -197,7 +199,11 @@ const SansadSpeaker = (function () {
     camera = new THREE.PerspectiveCamera(60, w / h, 0.1, 90);
     frameCamera(w, h);
 
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: "high-performance" });
+    } catch (_) {
+      renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h);
     renderer.shadowMap.enabled = false;
@@ -682,9 +688,14 @@ const SansadSpeaker = (function () {
     updateHUD();
     if (Audio) Audio.play("gavelDouble");
 
-    for (let i = 0; i < 14; i++) spawnMP();
+    try {
+      for (let i = 0; i < 14; i++) spawnMP();
+    } catch (err) {
+      if (window.console) console.error(err);
+    }
+    visible = true;
     lastTs = performance.now();
-    loop(lastTs);
+    raf = requestAnimationFrame(loop);
   }
 
   function clearEntities() {
