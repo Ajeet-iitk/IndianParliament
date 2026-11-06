@@ -330,6 +330,66 @@ const SansadAudio = (function () {
         });
         break;
 
+      /* ---- Speaker's Chair game ---- */
+      case "calm":
+        tone({ freq: 660, dur: 0.14, type: "triangle", gain: 0.045, attack: 0.008 });
+        tone({ freq: 880, dur: 0.2, type: "sine", gain: 0.035, delay: 0.06, attack: 0.008 });
+        tone({ freq: 440, dur: 0.18, type: "sine", gain: 0.02, delay: 0.1 });
+        break;
+
+      case "suspend":
+        tone({ freq: 180, glide: 90, dur: 0.24, type: "sawtooth", gain: 0.05, filter: "lowpass", filterFreq: 600 });
+        tone({ freq: 96, glide: 52, dur: 0.3, type: "sine", gain: 0.12, attack: 0.004 });
+        noise({ dur: 0.18, gain: 0.05, filter: "highpass", freq: 2400, q: 0.7, delay: 0.05 });
+        break;
+
+      case "adjourn":
+        tone({ freq: 96, glide: 48, dur: 0.19, type: "sine", gain: 0.16, attack: 0.003 });
+        noise({ dur: 0.11, gain: 0.12, filter: "lowpass", freq: 900, q: 0.5 });
+        [523.25, 659.25, 783.99, 1046.5].forEach((freq, i) => {
+          tone({ freq, dur: 0.5, type: "sine", gain: 0.038, delay: 0.25 + i * 0.09, attack: 0.008 });
+        });
+        break;
+
+      case "throw":
+        noise({ dur: 0.28, gain: 0.035, filter: "bandpass", freq: 500, freqEnd: 2600, q: 0.8 });
+        tone({ freq: 300, glide: 160, dur: 0.22, type: "sine", gain: 0.02 });
+        break;
+
+      case "hit":
+        tone({ freq: 72, glide: 38, dur: 0.5, type: "sine", gain: 0.2, attack: 0.003 });
+        noise({ dur: 0.35, gain: 0.09, filter: "lowpass", freq: 700, q: 0.6 });
+        tone({ freq: 260, glide: 90, dur: 0.24, type: "sawtooth", gain: 0.045, delay: 0.02, filter: "lowpass", filterFreq: 900 });
+        break;
+
+      case "deflect":
+        tone({ freq: 1200, glide: 2100, dur: 0.09, type: "square", gain: 0.03, filter: "highpass", filterFreq: 900 });
+        noise({ dur: 0.09, gain: 0.04, filter: "highpass", freq: 3400, q: 0.6 });
+        break;
+
+      case "chant":
+        tone({ freq: 130 + Math.random() * 40, dur: 0.6, type: "sawtooth", gain: 0.014, filter: "bandpass", filterFreq: 340, q: 2 });
+        noise({ dur: 0.5, gain: 0.012, filter: "bandpass", freq: 300 + Math.random() * 120, q: 1.4 });
+        break;
+
+      case "quorum":
+        tone({ freq: 740, dur: 0.16, type: "square", gain: 0.03, filter: "highpass", filterFreq: 800 });
+        tone({ freq: 554, dur: 0.16, type: "square", gain: 0.03, delay: 0.18, filter: "highpass", filterFreq: 800 });
+        tone({ freq: 740, dur: 0.22, type: "square", gain: 0.032, delay: 0.36, filter: "highpass", filterFreq: 800 });
+        break;
+
+      case "placard":
+        noise({ dur: 0.12, gain: 0.03, filter: "highpass", freq: 2600, q: 0.7 });
+        tone({ freq: 900, glide: 1400, dur: 0.1, type: "triangle", gain: 0.022 });
+        break;
+
+      case "gavelDouble":
+        tone({ freq: 110, glide: 55, dur: 0.16, type: "sine", gain: 0.15, attack: 0.003 });
+        noise({ dur: 0.1, gain: 0.1, filter: "lowpass", freq: 850, q: 0.5 });
+        tone({ freq: 96, glide: 48, dur: 0.19, type: "sine", gain: 0.16, delay: 0.22, attack: 0.003 });
+        noise({ dur: 0.11, gain: 0.12, filter: "lowpass", freq: 900, q: 0.5, delay: 0.22 });
+        break;
+
       case "alarm":
         tone({ freq: 220, glide: 110, dur: 0.9, type: "sawtooth", gain: 0.05, filter: "lowpass", filterFreq: 700, q: 1.2, attack: 0.05 });
         tone({ freq: 164, glide: 82, dur: 1.1, type: "sine", gain: 0.045, delay: 0.12, attack: 0.04 });
