@@ -10,6 +10,7 @@
   const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const Audio = typeof SansadAudio !== "undefined" ? SansadAudio : null;
   const Roaches = typeof SansadRoaches !== "undefined" ? SansadRoaches : null;
+  const Redline = typeof SansadRedline !== "undefined" ? SansadRedline : null;
   const STORE_KEY = "sansad.progress.v1";
   const LANG_KEY = "sansad.lang.v1";
   const THEME_KEY = "sansad.theme.v1";
@@ -1689,6 +1690,10 @@
       Roaches.setReduced(reduceMotion);
       Roaches.refreshLanguage();
     }
+    if (Redline) {
+      Redline.setT(t);
+      Redline.refreshLanguage();
+    }
 
     if (game) {
       document.title = t("meta.game", { name: locScenario(game.scenario).title });
@@ -1734,6 +1739,10 @@
       Roaches.setT(t);
       Roaches.setReduced(reduceMotion);
       Roaches.init();
+    }
+    if (Redline) {
+      Redline.setT(t);
+      Redline.init();
     }
 
     if (Audio) {
