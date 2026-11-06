@@ -290,7 +290,10 @@
     const rec = progress.records[s.id];
     const stars = rec ? rec.stars : 0;
     const house = s.brief.house.split("(")[0].trim();
-    return `<article class="scenario-card" data-start="${s.id}" role="button" tabindex="0" style="--accent:${s.accent};--i:${index || 0}"
+    const rawHouse = String(raw.brief.house);
+    const hasLS = /Lok Sabha/i.test(rawHouse), hasRS = /Rajya Sabha/i.test(rawHouse);
+    const houseKey = hasLS && !hasRS ? "LS" : hasRS && !hasLS ? "RS" : "";
+    return `<article class="scenario-card" data-house="${houseKey}" data-start="${s.id}" role="button" tabindex="0" style="--accent:${s.accent};--i:${index || 0}"
         aria-label="${escapeHTML(t("select.card.start", { name: s.title }))}">
       <div class="sc-head">
         <span class="sc-icon">${iconSVG(s.icon)}</span>
@@ -447,6 +450,8 @@
     </svg>`;
 
     $("#chamberSvg").innerHTML = svg;
+    const gamePanel = $("#chamberSvg").closest(".chamber-panel");
+    if (gamePanel) gamePanel.dataset.house = key;
     $("#chamberBadge").textContent = info.badge;
     $("#chamberCount").textContent = t("game.seats", { n: info.total });
     $("#presidingName").textContent = info.presiding;
@@ -1384,6 +1389,8 @@
     </svg>`;
 
     $("#simBadge").textContent = houseInfo(simState.house).badge;
+    const simPanel = $("#simChamberSvg").closest(".chamber-panel");
+    if (simPanel) simPanel.dataset.house = simState.house;
     $("#simCount").textContent = t("game.seats", { n: total });
 
     if (statuses) {

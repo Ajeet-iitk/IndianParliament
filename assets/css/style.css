@@ -2358,3 +2358,41 @@ table { max-width: 100%; }
   .roach-card-home { flex-direction: column; align-items: flex-start; }
   .roach-card-home .btn { width: 100%; justify-content: center; }
 }
+
+/* Lok Sabha = green, Rajya Sabha = red (Order Paper, game chamber, history simulator) */
+.chamber-panel[data-house="LS"] {
+  background:
+    radial-gradient(620px 320px at 50% 0%, rgba(47, 191, 113, .20), transparent 66%),
+    linear-gradient(170deg, #0f2a22, #09151a 72%);
+  border-color: rgba(47, 191, 113, .32);
+}
+.chamber-panel[data-house="RS"] {
+  background:
+    radial-gradient(620px 320px at 50% 0%, rgba(226, 87, 107, .22), transparent 66%),
+    linear-gradient(170deg, #2e1119, #160a10 72%);
+  border-color: rgba(226, 87, 107, .34);
+}
+.chamber-panel[data-house="LS"] .chamber-badge { color: #7be3a8; }
+.chamber-panel[data-house="RS"] .chamber-badge { color: #ff9aa8; }
+.chamber-panel[data-house="LS"] .chamber-foot b { color: #7be3a8; }
+.chamber-panel[data-house="RS"] .chamber-foot b { color: #ff9aa8; }
+.scenario-card[data-house="LS"] {
+  background: linear-gradient(160deg, rgba(47, 191, 113, .17), rgba(47, 191, 113, .03) 55%, rgba(255,255,255,.008));
+  border-color: rgba(47, 191, 113, .26);
+}
+.scenario-card[data-house="RS"] {
+  background: linear-gradient(160deg, rgba(226, 87, 107, .18), rgba(226, 87, 107, .03) 55%, rgba(255,255,255,.008));
+  border-color: rgba(226, 87, 107, .28);
+}
+[data-theme="day"] .chamber-panel[data-house="LS"] { background: radial-gradient(600px 300px at 50% 0%, rgba(47,191,113,.28), transparent 65%), linear-gradient(170deg, #f4fff8, #e3f4ea 70%); }
+[data-theme="day"] .chamber-panel[data-house="RS"] { background: radial-gradient(600px 300px at 50% 0%, rgba(226,87,107,.26), transparent 65%), linear-gradient(170deg, #fff6f7, #f7e2e5 70%); }
+[data-theme="day"] .scenario-card[data-house="LS"] { background: linear-gradient(160deg, #e7f7ee, #fbf5e9 70%); }
+[data-theme="day"] .scenario-card[data-house="RS"] { background: linear-gradient(160deg, #fbe6e9, #fbf5e9 70%); }
+
+/* Mobile dock must always fit the screen (5 links, long Hindi labels) */
+@media (max-width: 760px) {
+  .mobile-dock { width: calc(100vw - 24px); max-width: 460px; justify-content: space-between; gap: 2px; overflow-x: auto; scrollbar-width: none; }
+  .mobile-dock::-webkit-scrollbar { display: none; }
+  .dock-link { flex: 1 1 auto; min-width: 0; padding: 10px 6px; font-size: .64rem; text-align: center; }
+}
+@media (max-width: 380px) { .dock-link { padding: 10px 4px; font-size: .6rem; } }
