@@ -1147,8 +1147,26 @@
     meta.setAttribute("content", emergency ? "#120204" : theme === "day" ? "#f5efe3" : "#070b17");
   }
 
+  function themeRipple(next) {
+    if (reduceMotion) return;
+    const btn = $("#themeBtn");
+    if (!btn) return;
+    const r = btn.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const w = Math.max(window.innerWidth, window.innerHeight) * 2.4;
+    const el = document.createElement("div");
+    el.className = "theme-ripple " + (next === "day" ? "to-day" : "to-night");
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+    el.style.width = el.style.height = w + "px";
+    document.body.appendChild(el);
+    el.addEventListener("animationend", () => el.remove(), { once: true });
+  }
+
   function setTheme(next) {
     theme = next === "day" ? "day" : "night";
+    themeRipple(theme);
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
     syncThemeColor();
